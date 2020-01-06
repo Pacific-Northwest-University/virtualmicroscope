@@ -1,0 +1,1445 @@
+/* jrscpStyleMain.css
+	Copyright 2019, 2020  Pacific Northwest University of Health Sciences
+    
+    jrscpStyleMain.css is part of "PNWU Microscope", which is an internet web-based program that
+		displays digitally-scanned microscopic specimens.
+	"PNWU Microscope" is free software:  you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation, either version 3
+		of the License, or any later version.  See <https://www.gnu.org/licenses/gpl-3.0.html>
+ 	"PNWU Microscope" is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+    	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+        See the GNU Public License for more details.
+	Currently, "PNWU Microscope" consists of 15 principal files and other supplementary files:
+    	- one HTML file.
+        - one cascading style sheet (jrscpStyleMain.css)
+        - nine javascript files
+        - four PHP files
+	Questions concerning "PNWU Microscope" may be directed to:
+    	James Rhodes, PhD
+        Pacific Northwest Univesity of Health Sciences
+        200 University Parkway
+        Yakima WA 98901 USA
+*/
+
+
+
+@charset "utf-8";
+/* jrscpStyleMain.css =>  contains the principal style sheets for jrscp */
+/*   currently includes style sheets for:   */
+/*     slideView     */
+/*     navigator     */
+/*     menu          */
+
+
+@-ms-viewport { 
+	width: device-width;
+	height: device-height;
+	}
+
+-ms-@viewport {
+    width: device-width;
+    initial-scale: 1;
+    zoom: 1;
+    min-zoom: 1;
+    max-zoom: 1;
+    user-zoom: fixed;
+}
+@viewport {
+    width: device-width;
+    initial-scale: 1;
+    zoom: 1;
+    min-zoom: 1;
+    max-zoom: 1;
+    user-zoom: fixed;
+}
+
+
+		/*  ******************************** */
+		/*       styles for slideView        */
+		/*  ******************************** */
+
+	
+.centerIntro {
+	display: block;
+	position: absolute;
+	box-sizing:border-box;
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	margin: 0px;
+	text-align: center;
+	font-family:Calibri, Arial, Helvetica, sans-serif;
+/*	font-family:Calibri, Hiragino Maru Gothic Pro, Arial, Helvetica, sans-serif; */
+	font-size: 100px; 
+	color: rgb(1,85, 124);
+	background-color: white;
+	opacity: 0;
+	}
+
+
+/* initially grTileGrid consists of one tile; sldBuildSlideView() will add tiles */
+/* default tile size is 256; sldBuildSlideView() will re-set this to jrTileSizeX & jrTileSizeY */
+.grTileGrid {
+	display: grid;
+	grid-template-columns: 256px;
+	grid-template-rows:  256px;
+	background-color: black;
+	position: absolute;
+	}
+
+.grTile {
+	background-color: rgb(128,0,128);
+	color: white;
+	width: 256px;
+	height: 256px;
+	}
+	
+.boxSldBoundary {
+	position: absolute;
+	overflow: hidden;
+	z-index: -1;
+	background-color: rgb(190,190,255);
+	border: 2px solid black;
+	}
+
+.creditBoxClass {
+	display: block;
+	position: absolute;
+	top: 20px;
+	right: 30px;
+	padding: 0px;
+	background-color: rgba(255,255,255,0.1);
+	box-shadow: 0px 0px 8px 8px rgba(255,255,255,0.1);
+	color: black;
+	font-size: 14px;
+	text-shadow: 2px 2px 4px white, 2px -2px 4px white, -2px 2px 4px white, -2px -2px 4px white,
+		6px 6px 12px rgba(255,255,255,0.6), 6px -6px 12px rgba(255,255,255,0.6),
+		-6px 6px 12px rgba(255,255,255,0.6),-6px 16px 12px rgba(255,255,255,0.6)   ;
+	text-align:right;
+	line-height: 0.85;
+	z-index: 1;
+	}
+
+
+.sldWaitClk {
+	display: none;
+	position:absolute;
+	width:34px;
+	height:34px;
+	z-index:4;
+	}
+	
+/* The style-code below prevents selection (turning blue) of image tiles in slideView when mouse is down*/
+/*   I tried  ' imgNode.style.userSelect = "none"; ' in sldGetNewImgNode, but this did NOT work for FireFox */
+/*   The style-code below was copied from:  */
+/*     "https://stackoverflow.com/questions/6816080/how-to-disable-highlight-on-a-image" */
+/*   We may have to modify this (i.e. add it to a class of "img" that only includes the slideView tiles */
+/*      if there is a problem later */
+img {
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+/*  With iPad touchscreen, there is a problem with the browser (Safari) trying to select text on buttons. */
+/*		Like "img" tags, this should prevent selection of text within a button. */
+/*	As was the case with "img" tags above, globally specifying styles for a standard tag is dangerous, */
+/*		and we may need to alter this later.  Added 12/03/19 */
+button {
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+
+
+
+		/*  ******************************** */
+		/*       styles for menus        */
+		/*  ******************************** */
+
+ul.menu {
+	position: absolute;
+	box-sizing: border-box;
+	top: 0px;
+	left: 0px;
+	width: 50%;
+	height: 34px;
+	list-style-type: none;
+	border: 2px solid black;
+	margin: 0px;
+	padding: 0px;
+	background-color: rgb(128,128,192);
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 18px;
+	}
+
+
+li.menuInlineClickable {
+	float: left;
+	display: inline-block;
+	box-sizing: border-box;
+	min-width: 95px;
+	height: 100%;
+	color: white;
+	padding: 0px;
+	cursor: pointer;
+	visibility:hidden;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+li.menuInlineClickable:hover {
+	background-color: rgb(64,64,128);
+	}
+
+li.menuInlineClickable:active {
+	color: rgb(160,0,0);
+	}
+
+li.menuDrpDwnContainer {
+	float: left;
+	display:inline-block;
+	min-height: 40px;
+	}
+
+.menuDrpDwnItem {
+	display: inline-block;
+	box-sizing: border-box;
+	min-width: 90px;
+	height: 100%;
+	border-right: 2px solid black;
+	color: white;
+	text-align: center;
+	padding: 5px 0px;
+	cursor: default;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+li.menuDrpDwnContainer:hover {
+	background-color: rgb(64,64,128);
+	}
+
+
+.menuDrpDwnContent {
+	display: none;
+	position: absolute;
+	top: 30px;
+	width: 265px;
+	background-color: rgb(224,224,224);
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	padding: 0px;
+	box-shadow: 4px 3px 3px 1px rgba(128,128,128,0.3);
+	z-index: 1;
+}
+
+.menuDrpDwnContainer:hover .menuDrpDwnContent {
+	display: block;
+}
+
+.menuDrpDwnSubItem {
+	position: relative;
+	width: 255px;
+	height: 20px;
+	padding: 5px;
+	border-bottom: 1px solid black;
+	font-size: 16px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.menuClickable {
+	cursor: pointer;
+	}
+
+.menuClickable:hover {
+	background-color: rgb(208,208,224);
+	}
+
+.menuClickable:active {
+	color: rgb(192,0,0);
+	background-color: rgb(226,160,160);
+	}
+
+.menuRadioItem {
+	height:22px;
+	padding-left: 4px; 
+	padding-top:2px; 
+	border-right: 1px solid black;
+	}
+
+.menuDivider {
+	height: 2px;
+	padding: 0px;
+	width: 265px;
+	border-bottom: 1px solid black;
+	background-color: rgb(128,128,192);
+	}
+
+li.menuInfoItem {
+	float: right;
+	display: inline-block;
+	box-sizing: border-box;
+	height: 100%;
+	color: white;
+	text-align: left;
+	padding: 4px;
+	border-left: 2px solid black;
+	}
+
+.menuInfoWindow {
+	display: inline-block;
+	float:right;
+	min-width: 70px;
+	height: 20px;
+	background-color: white;
+	color: black;
+	text-align: right;
+	vertical-align: middle;
+	border: 1px solid gray;
+	padding-right: 5px;
+	padding-left: 3px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	cursor:default
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+
+.menuSideContainer {
+	display: block;
+	min-width: 270px;
+	}
+
+
+.menuSideContent {
+	display: none;
+	position:absolute;
+	left: 265px;
+	width: 265px;
+	background-color: rgb(224,224,224);
+	border-bottom: 1px solid black;
+	border-top: 2px solid black;
+	border-right: 2px solid black;
+	border-left: 2px solid black;
+	padding: 0px;
+	box-shadow: 4px 3px 3px 1px rgba(128,128,128,0.3);
+	z-index: 2;
+}
+
+.menuSideContainer:hover .menuSideContent{
+	display: block;
+	}
+
+.menuSideItem {
+	}
+
+.menuSideContainer:hover .menuSideItem{
+	background-color: rgb(208,208,224);
+	}
+
+.menuSideItem:hover {
+	background-color: rgb(208,208,224);
+	}
+
+
+
+
+
+		/*  ****************************************** */
+		/*       styles for slide-selection box        */
+		/*  ****************************************** */
+
+.sldSelBoxClass {
+	display:none;
+	position:fixed;
+	top: 80px;
+	left: 50px;
+	width: 450px;
+	height: 48px;
+	border: 8px outset rgb(224,128,128);
+	box-shadow: 4px 5px 4px 2px rgba(64,32,32,0.5);
+	background-color: white;
+	padding: 3px 1px 1px 3px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 18px;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+
+.sldSelInpBoxClass{
+	display:inline-block;
+	width: 378px;
+	background-color: white;
+	border: 1px black solid;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	cursor: pointer;
+	overflow:hidden;
+	}
+	
+.sldSelInpBoxArrowClass {
+	float:right; 
+	border-left: 1px black solid; 
+	background-color: rgb(248,232,232);
+	font-size:18px;
+	font-stretch:expanded;
+	font-weight: bold;
+	}
+
+
+.sldSelDrpDwnContainer {
+	float: right;
+	display:inline-block;
+	margin-top: 3px;
+	}
+
+.sldSelDrpDwnContainer:hover 
+	.sldSelTable{
+		display:block;
+		}
+
+.sldSelDrpDwnContainer:hover 
+	.sldSelInpBoxClass{
+		display:none;
+		}
+
+.sldSelTable {
+	display: none;
+	width: 380px;
+	border: 1px solid black;
+	border-collapse:collapse;
+	background-color: rgb(255,248,248);
+	max-height: 450px;
+	overflow-y: auto;
+	}
+
+.sldSelTable:hover {
+	display: block;
+	}
+
+
+.sldSelHdrItem {
+	border: 1px solid black;
+	border-collapse:collapse;
+	margin: 0px;
+	padding: 3px 0px;
+	background-color: rgb(255,248,248);
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 14px
+	}
+
+
+.sldSelTabRow {
+	border: 1px solid black;
+	border-collapse:collapse;
+	margin: 0px;
+	padding: 0px;
+	background-color: rgb(255,248,248);
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 14px;
+	cursor: pointer;
+	}
+
+
+.sldSelTabRow:hover {
+	cursor:pointer;
+	background-color: rgb(248,232,232);
+	}
+
+
+.sldSelTabRow:active {
+	color: rgb(192,0,0);
+	background-color: rgb(226,160,160);
+	cursor:pointer;
+	}
+
+	
+.sldSelTabSldNum {
+	width: 45px;
+	border: 1px solid black;
+	border-collapse:collapse;
+	text-align:right;
+	padding-right: 11px;
+	padding-left: 0px
+	}
+
+.sldSelTabName {
+	text-align:left;
+	border: 1px solid black;
+	border-collapse:collapse;
+	padding-left: 5px;
+	padding-right: 0px
+	}
+	
+.sldSelTabFP {
+	width: 28px;
+	border: 1px solid black;
+	border-collapse:collapse;
+	text-align:right;
+	padding-right: 11px;
+	padding-left: 0px
+	}
+
+
+
+	
+
+		/*  ********************************************** */
+		/*       styles for Change Setting 'infoBox        */
+		/*  ********************************************** */
+
+.chgExtraBx {
+	position:absolute;
+	box-sizing: border-box;
+	top: 86px;
+	width: 100%;
+	height: 120px;
+	border: 1px solid black;
+	background-color: rgb(255,240,240);
+	padding: 10px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 14px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.chgItem {
+	position: relative;
+	width: 260px;
+	height: 20px;
+	padding: 5px;
+	background-color: rgb(255,240,240);
+	border-bottom: 1px solid black;
+	font-family: Arial, Helvetica, sans-serif; 
+/*	font-family: "Calibri", Geneva, sans-serif; */
+	font-size: 14px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.chgItem:hover {
+	background-color: rgb(244,228,228);
+	}
+
+.chgDivider {
+	height: 2px;
+	padding: 0px;
+	width: 270px;
+	background-color: rgb(192,128,128);
+	border-bottom: 1px solid black;
+	}
+
+.chgInputBx {
+	box-sizing: border-box;
+	position:absolute;
+	display: block;
+	margin: 1px;
+	margin-right: 0px;
+	border: 1px solid black;
+	border-right: 0px;
+	top: 0px;
+	right: 35px;
+	height: 27px;
+	width: 42px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14px;
+	padding-top: 2px;
+	padding-right: 5px;
+	text-align:right;
+	color:black;
+	background-color: white;}
+
+.chgStepper {
+	display:block;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	height: 25px;
+	width: 15px;
+	margin: 1px;
+	margin-right:3px;
+	border: 1px solid black;
+	}
+	
+.chgStepperBtn{
+	position:absolute;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 50%;
+	font-size:7px;
+	background-color: rgb(240,240,240);
+	border-color: rgb(192,192,192);
+	}
+
+.chgStepperBtn:hover {
+	background-color: rgb(232,208,208);
+	border-color: rgb(192,160,160);
+	cursor:pointer;
+	}
+
+.chgStepperBtn:active {
+	background-color: rgb(224,176,176);
+	border-color: rgb(192,160,160);
+	color: rgb(184,0,0);
+	cursor:pointer;
+	}
+
+
+
+		/*  ********************************** */
+		/*       styles for GoTo box        */
+		/*  ********************************** */
+
+.gotoBoxClass{
+	position: absolute;
+	display: none;
+	overflow:hidden;
+	z-index: 3;
+	top: 100px;
+	left: 300px;
+	width:290px;
+	height: 175px;
+	background-color: rgb(248,226,226);
+	border: 9px outset rgb(224,128,128);
+	box-shadow: 8px 10px 4px 2px rgba(64,32,32,0.5);
+	}
+	
+.gotoHdrTxtClass {
+	position:absolute;
+	top: 0px;
+	left:0px;
+	width:100%;
+	height: 45px;
+	border-bottom: 5px solid rgb(224,128,128);
+	font-size: 32px;
+	text-align:center
+	}
+
+.gotoBodyClass {
+	position:absolute;
+	top: 50px;
+	width: 100%;
+	height: 100%;
+	border: 1px solid black;
+	background-color: rgb(255,240,240);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:16px;
+	}
+
+
+.gotoInputBx {
+	box-sizing: border-box;
+	display: inline-block;
+	float:right;
+	margin: 5px 5px 0px 3px;
+	border: 1px solid black;
+	top: 0px;
+	height: 25px;
+	width: 110px; 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14px;
+	padding-top: 1px;
+	padding-right: 5px;
+	text-align:right;
+	color:black;
+	background-color: white;
+	}
+	
+
+
+
+		/*  ********************************** */
+		/*       styles for About box        */
+		/*  ********************************** */
+
+.aboutBoxClass{
+	position: fixed;
+	display: none;
+	z-index: 3;
+/*	left & top have to be set by in HTML/javascript for box to move */
+/*	width (700px) must be set in HTML/javascript to center 'close' button */
+	min-height: 150px;
+	background-color: rgb(248,226,226);
+	border: 9px outset rgb(224,128,128);
+	box-shadow: 8px 10px 4px 2px rgba(64,32,32,0.5);
+	padding: 0px;
+	}
+
+.aboutHdrClass {
+	width: 100%;
+	height: 45px;
+	padding: 0px;
+	font-family:Calibri, Arial, Helvetica, sans-serif;
+	}
+	
+.aboutHdrTxtClass {
+	position:absolute;
+	top: 0px;
+	left:0px;
+	width:100%;
+	height: 45px;
+	border-bottom: 5px solid rgb(224,128,128);
+	font-size: 32px;
+	font-weight:bold;
+	text-align:center
+	}
+
+.aboutBodyClass {
+	display: block;
+	border: 1px solid black;
+	background-color: rgb(255,240,240);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14px;
+	padding: 0px;
+	}
+
+.aboutBodyTxtClass {
+	display: inline-block; 
+	padding: 4px 8px 0px 20px;
+	}
+
+.aboutButton {
+	position:fixed;
+	float:none;
+	left: 100px;
+	display:inline-block;
+	margin: 3px;
+	}
+	
+.aboutBotBox {
+	height: 36px;
+	width: 100%; 
+	background-color: rgb(224,128,128); 
+	border: 1px solid black; 
+	}
+
+
+		/*  ******************************* */
+		/*       styles for Wait box        */
+		/*  ******************************* */
+	/* ************************************************** */
+	/* Note: wait box uses aboutBox classes, with         */
+	/*	waitBox classes cascaded behind aboutBox classes  */
+	/* ************************************************** */
+
+.waitBoxClass {
+/*	left & top have to be set by in HTML/javascript for box to move */
+/*	width (700px) must be set in HTML/javascript to center 'close' button */
+	position: fixed;
+	display: none;
+	z-index: 3;
+	min-height: 50px;
+	background-color: rgb(248,226,226);
+	border: 9px outset rgb(224,128,128);
+	box-shadow: 8px 10px 4px 2px rgba(64,32,32,0.5);
+	padding: 0px;
+	}
+
+.waitHdrClass {
+	width: 100%;
+	height: 45px;
+	padding: 0px;
+	font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+	}
+	
+.waitHdrTxtClass {
+	position:absolute;
+	top: 0px;
+	left:0px;
+	width:100%;
+	height: 45px;
+	border-bottom: 5px solid rgb(224,128,128);
+	font-size: 32px;
+	text-align:center
+	}
+
+.waitBodyClass {
+	box-sizing: border-box;
+	width: 100%;
+	display: block;
+	border: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	background-color: rgb(255,240,240);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14px;
+	padding: 0px;
+	}
+
+.waitTopClass {
+/*	width: 342px; 
+*/	padding: 2px 4px; 
+	margin-top: 4px; 
+	border-top: 1px solid black;
+	}
+
+.waitTab {
+	table-layout: fixed;
+	border: 1px solid black;
+	border-collapse:collapse;
+	font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+	font-size:14px;
+	width: 330px;
+	}
+
+tr.waitTab {
+	background-color: rgb(255,240,240);
+	}
+
+tr.waitTab:hover {
+	background-color: rgb(238,228,228);
+	}
+
+th.waitTab {
+	height: 32px;
+	text-align:center;
+	vertical-align:middle;
+	font-weight:bold;
+	line-height: 0.9;
+	padding: 0px;
+	border: 1px solid black;
+	/*  make text non-selectable & non-draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+td.waitTab{
+	height: 16px;
+	vertical-align:middle;
+	border: 1px solid black;
+	/*  make text non-selectable & non-draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.waitSmTd {
+	text-align: center;
+	padding: 0px;
+	}
+
+.waitBigTd{
+	text-align: right;
+	padding: 0px 24px 0px 0px;
+	}
+
+
+		/*  ************************************ */
+		/*       styles for copyright box        */
+		/*  ************************************ */
+
+.cpyRtBxClass {
+	position: fixed;
+	z-index: 4;
+	top: 250px;
+	left:600px;
+	height: 200px;
+	width: 450px;
+	border: 15px outset rgb(1,128, 192);
+	background-color: rgb(248,253,255);
+	box-shadow: 8px 10px 4px 2px rgba(24,24,24,0.6);
+	}
+
+.cpyRtHdrClass {
+	position:absolute; 
+	top: 16px;
+	left: 190px; 
+	width: 230px;
+	font-family:Calibri, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: rgb(1,64,96);
+	font-size: 44px;
+	text-align: center;
+	line-height: 0.82;
+		}
+
+
+.cpyRtTxtClass {
+	position:absolute; 
+	bottom: 6px; 
+	left: 164px; 
+	width: 260px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: black;
+	font-size: 16px;
+	text-align:left;
+	}
+
+
+		/*  ********************************** */
+		/*       styles for warning box        */
+		/*  ********************************** */
+
+.warnBoxClass {
+	position:fixed;
+	display:none;
+	z-index: 5;
+	border: 7px ridge rgb(208,0,0);
+	background-color: rgb(255,232,232);
+	top: 100px;
+	left: 300px;
+	width:300px;
+	min-height: 100px;
+	padding: 0px;
+	}
+ 
+.warnTxtBoxClass {
+	display: block;
+	padding: 0px 10px 10px;
+	text-align:left;
+	font-size:20px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+ 	}
+
+.warnHdrClass {
+	width: 100%;
+	height: 28px;
+	padding: 0px;
+	}
+	
+
+.warnHdrTxtClass {
+	position:absolute;
+	padding:0px;
+	top: -2px;
+	left:0px;
+	width:100%;
+	font-size: 24px;
+	text-align:center;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+		/*  ******************************** */
+		/*       styles for navigator        */
+		/*  ******************************** */
+
+.navClass {
+	display: block;
+	position: absolute;
+	height: 236px;
+	width: 260px;
+	bottom: 50px;
+	right: 50px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.navHdr {
+	display:block; 
+	position:absolute;
+	top: 2px;
+	width: 100%;
+	font-size: 28px; 
+	cursor: default; 
+	}
+
+.navClickable {
+	background-color: rgba(224,224,224,0.8);
+	border: 1px solid rgba(160,160,160,0.9);
+	cursor: pointer;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+/* navigator background colors are set explicitly in jrscpMenu.js
+		and the :hover selector results in unwanted default actions
+		when a touchevent drags from something else onto a navigator
+		button ... best way to suppress the default action seems
+		to be to eliminate the default :hover option  1/01/20
+.navClickable:hover {
+	background-color: rgba(224,192,192,0.8);
+	}
+*/
+
+.navClickable:active {
+	color: rgb(160,0,0);
+	}
+
+/* 1/01/20  added navNoWait class for mouse wheel controls 
+		since their background colors are not explicitly set */
+.navNoWait {
+	background-color: rgba(224,224,224,0.8);
+	border: 1px solid rgba(160,160,160,0.9);
+	cursor: pointer;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.navNoWait:hover {
+	background-color: rgba(224,192,192,0.8);
+	}
+
+.navVertArrow {
+	position: absolute;
+	width: 70px;
+	height: 16px;
+	margin-left: 96px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.navSideArrow {
+	position: absolute;
+	width: 16px;
+	height: 70px;
+	margin-top: 84px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.navMiddleBox {
+	position:absolute;
+	width: 87px;
+	height: 152px;
+	border: 2px solid rgba(160,160,160,0.9);
+	background-color: rgba(250,250,250,0.5);
+	}
+
+.navMidResponseBox {
+	display:block;
+	position:absolute;
+	box-sizing: border-box;
+	width: 85px;
+	height: 30px;
+	margin: 1px;
+	text-align:center;
+	background-color: rgba(224,224,224,0.8);
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.navInsideBox {
+	position: absolute;
+	width: inherit;
+	margin: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border-style: none;
+	text-align: center;
+	overflow: hidden;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+	
+.navText {
+	display:inline-block;
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	background-color:transparent;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+		/* alter height */
+	-webkit-transform:scale(1,0.95); /* Safari and Chrome */
+	-moz-transform:scale(1,0.95); /* Firefox */
+	-ms-transform:scale(1,0.95); /* IE 9 */
+	-o-transform:scale(1,0.95); /* Opera */
+	transform:scale(1,0.95); /* W3C */
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none;
+	}
+
+.navTxtNarrow {
+	-webkit-transform:scale(0.83,0.95); /* Safari and Chrome */
+	-moz-transform:scale(0.83,0.95); /* Firefox */
+	-ms-transform:scale(0.83,0.95); /* IE 9 */
+	-o-transform:scale(0.83,0.95); /* Opera */
+	transform:scale(0.83,0.95) /* W3C */
+	}
+
+		/*  ********************************** */
+		/*       styles for info tables        */
+		/*  ********************************** */
+
+
+.infoBox {
+	position: absolute;
+	overflow:hidden;
+	left: 360px;
+	background-color: rgb(255,240,240);
+	border: outset;
+	border-width: 8px;
+	border-color: rgb(224,128,128);
+	width: 570px;
+	top: 5px;
+	z-index: 3;
+	box-shadow: 8px 10px 4px 2px rgba(64,32,32,0.5);
+	}
+	
+.infoButton {
+	position:relative;
+	float: left;
+	height: 30px;
+	width: 140px;
+	font-size:14px;
+	border:outset;
+	border-width: 5px;
+	border-color: rgb(192,192,192);
+	background-color: rgb(232,232,232);
+	margin-right: 1px;
+	cursor:pointer;
+	}
+
+.infoButton:hover {
+	background-color: rgb(232,208,208);
+	}
+	
+.infoButton:active {
+	border: inset;
+	border-color: rgb(226,160,160);
+	color: rgb(160,0,0);
+	}
+
+.infoContent {
+	position: absolute;
+	box-sizing: border-box;
+/*	overflow: auto;  */
+	width: 100%;
+	height: 100%;
+	background-color: rgb(232,192,192);
+	border: 1px solid black;
+	top: 85px;
+	font-size: 12px;
+	}
+
+.infoSubContent {
+	position: absolute;
+	top: 0px;
+	height: 30px;
+	width: 100px;
+	font-size: 12px;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	}
+
+.infoMvBtn {
+	position:absolute;
+	float:left;
+	height: 45px;
+	width: 45px;
+	border:solid;
+	border-color: black;
+	border-width: 1px;
+	background-color: rgb(232,232,248);
+	font-size: 11px;
+	color: black;
+	text-align:center;
+	padding: 0px;
+/*  No select or drag text */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none;
+	}
+
+.infoMvBtn:hover {
+	background-color: rgb(208,208,236);
+	cursor:move;
+	}
+
+.infoMvBtn:active {
+	background-color: rgb(128,128,192);
+	color: white;
+	cursor:move;
+	}
+
+
+.tabCache {
+	table-layout: fixed;
+	border-collapse:collapse;
+	width: 188px;
+	}
+
+tr.tabCache {
+	background-color: rgb(255,240,240);
+	}
+
+tr.tabCache:hover {
+	background-color: rgb(238,228,228);
+	}
+
+th.tabCache {
+	height: 20px;
+	text-align:center;
+	vertical-align:middle;
+	font-weight:bold;
+	padding-left: 4px;
+	padding-right: 5px; 
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border-right: 1px solid black;
+	}
+
+td.tabCache{
+	height: 20px;
+	text-align:right;
+	vertical-align:middle;
+	padding-left: 1px; 
+	padding-right: 8px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	}
+
+.tabSVw {
+	table-layout: fixed;
+	border-collapse:collapse;
+	width: 1000px;
+	}
+
+tr.tabSVw {
+	background-color: rgb(255,240,240);
+	}
+
+tr.tabSVw:hover {
+	background-color: rgb(238,228,228);
+	}
+
+th.tabSVw {
+	height: 20px;
+	text-align:center;
+	vertical-align:middle;
+	font-weight:bold;
+	padding-left: 2px;
+	padding-right: 2px; 
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+	}
+
+td.tabSVw{
+	height: 20px;
+	text-align:right;
+	vertical-align:middle;
+	padding-right: 14px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	border-bottom: 1px solid black;
+	border-right: 1px solid black;
+	}
+
+	
+	

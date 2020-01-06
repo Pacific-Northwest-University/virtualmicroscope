@@ -1,0 +1,1678 @@
+<!-- Microscope.htm
+	Copyright 2019, 2020  Pacific Northwest University of Health Sciences
+    
+    Microscope.htm is part of "PNWU Microscope", which is an internet web-based program that 
+		displays digitally-scanned microscopic specimens.
+	"PNWU Microscope" is free software:  you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation, either version 3
+		of the License, or any later version.  See <https://www.gnu.org/licenses/gpl-3.0.html>
+ 	"PNWU Microscope" is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+    	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+        See the GNU Public License for more details.
+	Currently, "PNWU Microscope" consists of 15 principal files and other supplementary files:
+    	- one HTML file (Microscope.htm).
+        - one cascading style sheet
+        - nine javascript files
+        - four PHP files
+	Questions concerning "PNWU Microscope" may be directed to:
+    	James Rhodes, PhD
+        Pacific Northwest Univesity of Health Sciences
+        200 University Parkway
+        Yakima WA 98901 USA
+-->
+    
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0">
+
+
+<title>
+	PNWU Microscope
+    </title>
+<link rel="icon" type="image/png" href="favicon.ico">
+	<!-- use external style sheet -->
+<link rel="stylesheet" type="text/css" href="jrscpStyleMain.css">
+</head>
+
+<body onLoad="prgInitWnd()" onResize="prgWindowResize()">
+	<!-- create menu -->
+			<!--  menuMain1 is the left-half of the menu, contining the drop-down boxes-->
+<ul id="menuMain1" class="menu" style="border-right: 0px">
+	<li id="menuToSldList" class="menuInlineClickable" onClick="sldClearSldVw()">
+    	<img src="../images/PNWU_icon.png" alt="" style="height:30px; width:30px; background-color: rgba(255,255,255,0.4); float:left">
+        <span style="font-size:14px; line-height: 0.9; text-align:center; float:right; margin: 3px 5px">
+        	Back to<br>Slide List
+            </span>
+		</li>
+				<!-- "View" menu  -->
+    <li class="menuDrpDwnContainer"> 
+		<div id="menuViewDrpDwn" class="menuDrpDwnItem">View</div>
+        <div class="menuDrpDwnContent">
+			<div class="menuSideContainer"> <!-- "Menu items" side container => menuDrpDwnSubItem at end of <div>  -->
+				<div class="menuSideContent">
+								<!-- "Show slide name" button  -->
+        			<div id="menuSldNmMenuVis" class="menuClickable menuDrpDwnSubItem" 
+            						onClick="menuSetVisChkBx(event,'menuSldNmVisCheckBx')">
+		            	<input type="checkbox" id="menuSldNmVisCheckBx" checked 
+                        		style="top: 5px; left: 0px; cursor: pointer"
+								onClick="menuSetVisChkBx(event,'menuSldNmVisCheckBx')">
+						<span id="menuSldNmVisLbl" style="cursor: pointer; display:inline-block" 
+        		        		onClick="menuSetVisChkBx(event,'menuSldNmVisCheckBx')">
+                			Show <b>slide name</b> on menu
+							</span>
+        		        </div>
+								<!-- "Show focal plane" button  -->
+		        	<div id="menuFMenuVis" class="menuClickable menuDrpDwnSubItem" 
+        		    				onClick="menuSetVisChkBx(event,'menuFVisCheckBx')">
+            			<input type="checkbox" id="menuFVisCheckBx" checked 
+                        		style="top: 5px; left: 0px; cursor: pointer"
+								onClick="menuSetVisChkBx(event,'menuFVisCheckBx')">
+						<span id="menuFVisLbl" style="cursor: pointer; display:inline-block" 
+        		        		onClick="menuSetVisChkBx(event,'menuFVisCheckBx')">
+                			Show <b>focal plane</b> on menu
+							</span>
+        		        </div>
+								<!-- "Show zoom-level" button  -->
+		        	<div id="menuZMenuVis" class="menuClickable menuDrpDwnSubItem"
+        		    				onClick="menuSetVisChkBx(event,'menuZVisCheckBx')">
+            			<input type="checkbox" id="menuZVisCheckBx" checked 
+                        		style="top: 5px; left: 0px; cursor: pointer"
+								onClick="menuSetVisChkBx(event,'menuZVisCheckBx')">
+						<span id="menuZVisLbl" style="cursor: pointer; display:inline-block" 
+                				onClick="menuSetVisChkBx(event,'menuZVisCheckBx')">
+		                	Show <b>zoom-level</b> on menu
+        		            </span>
+                		</div>
+								<!-- "Show x & y position" button  -->
+ 		       	<div id="menuXYMenuVis" class="menuClickable menuDrpDwnSubItem"
+        		    				onClick="menuSetVisChkBx(event,'menuXYVisCheckBx')">
+            			<input type="checkbox" id="menuXYVisCheckBx" checked style="top: 5px; left: 0px; cursor: pointer"
+								onClick="menuSetVisChkBx(event,'menuXYVisCheckBx')">
+						<span id="menuXYVisLbl" style="cursor: pointer; display:inline-block"
+        		        		onClick="menuSetVisChkBx(event,'menuXYVisCheckBx')">
+                			Show <b>x &amp; y position</b> on menu
+		                    </span>
+        		        </div>
+					</div>  <!-- End of "Menu items" side content  -->
+            	<div id="menuInfoMenuSideItm" class="menuDrpDwnSubItem menuSideItem">
+                	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show <b>menu items</b> 
+                    	<span style="float:right; margin-right:32px; letter-spacing:-8px">
+                        	&#10132;&#10148;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                    </div>
+				</div>  <!-- End of "Menu items" side container  -->
+	<!-- NOTE:  for some reason, to keep borders correct, width of div needs to be decreased if padding-left is increased  -->
+						<!-- "Show navigator" button  -->
+        	<div id="menuNavVis" class="menuDrpDwnSubItem"
+			    		onMouseDown="menuBtnNoWaitDown(this)" onMouseUp="menuBtnNoWaitUp(this)" 
+						onMouseOver="menuBtnNoWaitOver(this)" onMouseOut="menuBtnNoWaitOut(this)"
+						onClick="menuSetVisChkBx(event,'menuNavVisCheckBx')">
+            	<input type="checkbox" id="menuNavVisCheckBx" checked style="top: 5px; left: 0px"
+						onClick="menuSetVisChkBx(event,'menuNavVisCheckBx')">
+				<span id="menuNavVisLbl" style="cursor:inherit; display:inline-block"
+                		onClick="menuSetVisChkBx(event,'menuNavVisCheckBx')">
+                	Show <b>navigation controls</b>
+                    </span>
+                </div>
+						<!-- "Show slide credits" button  -->
+        	<div id="menuCreditVis" class="menuDrpDwnSubItem"
+			    		onMouseDown="menuBtnNoWaitDown(this)" onMouseUp="menuBtnNoWaitUp(this)" 
+						onMouseOver="menuBtnNoWaitOver(this)" onMouseOut="menuBtnNoWaitOut(this)"
+						onClick="menuSetVisChkBx(event,'menuCreditCheckBx')">
+            	<input type="checkbox" id="menuCreditCheckBx" checked style="top: 5px; left: 0px"
+						onClick="menuSetVisChkBx(event,'menuCreditCheckBx')">
+				<span id="menuCreditVisLbl" style="cursor:inherit; display:inline-block"
+                		onClick="menuSetVisChkBx(event,'menuCreditCheckBx')">
+                	Show <b>slide source</b>
+                    </span>
+                </div>
+        	<div id="menuViewFDiv1" class="menuDrpDwnSubItem menuDivider"></div>
+        	<div id="menuMusWheelSel" class="menuDrpDwnSubItem" style="height: 49px; width:265px; padding: 0px; border-bottom: 0px">
+				<div style="float:right; width: 134px; padding: 4px 0px 0px 0px; margin: 0px; text-align:left; font-size: 14px; line-height: 0.98">
+					Mouse wheel control:<br>&nbsp;&nbsp;&nbsp;focal plane or<br>&nbsp;&nbsp;&nbsp;zoom-level
+                    </div>
+            	<div style="width: 126px; left: 0px; top: -4px">
+                	<div id="menuMusWhlFBox" class="menuClickable menuRadioItem"
+                    		style="border-bottom: 1px solid black" onClick="sldMusWheelSelect(event,'f')">
+						<input type="radio" id="menuMusWhlFRadio" name="menuMusWheel" value="f" 
+                        	style="top: 5px; left: 0px; cursor: pointer" onClick="sldMusWheelSelect(event,'f')")>
+						<span id="menuMusWhlFTxt" class="menuClickable" style="display:inline-block"
+                        			onClick="sldMusWheelSelect(event,'f')">
+                        	<b>Focal plane</b>
+                            </span>
+                        </div>
+					<div id="menuMusWhlZBox" class="menuClickable menuRadioItem"
+                    		onClick="sldMusWheelSelect(event,'z')">
+						<input type="radio" id="menuMusWhlZRadio" name="menuMusWheel" value="z" checked="true"
+                        	style="top: 5px; left: 0px; cursor: pointer" onClick="sldMusWheelSelect(event,'z')")>
+						<span id="menuMusWhlZTxt" class="menuClickable" style="display:inline-block"
+                        			onClick="sldMusWheelSelect(event,'z')">
+							<b>Zoom-level</b>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+        	<div class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- "Move up" button  -->
+        	<div id="menuMvBtn12" class="menuDrpDwnSubItem" style="padding-left: 15px; width:245px"
+			    		onMouseDown="sldMvBtnDown(12,event.shiftKey,this)" onMouseUp="sldMvBtnUp(12,this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="sldMvBtnOut(12,this)">
+				<b>&uarr;</b>&nbsp;&nbsp;Move slide <b>UP</b>
+                </div>
+						<!-- "Move down" button  -->
+        	<div id="menuMvBtn22" class="menuDrpDwnSubItem" style="padding-left: 15px; width:245px"
+			    		onMouseDown="sldMvBtnDown(22,event.shiftKey,this)" onMouseUp="sldMvBtnUp(22,this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="sldMvBtnOut(22,this)">
+				<b>&darr;</b>&nbsp;&nbsp;Move slide <b>DOWN</b>
+                </div>
+						<!-- "Move left" button  -->
+        	<div id="menuMvBtn32" class="menuDrpDwnSubItem" style="padding-left: 8px; width:253px"
+			    		onMouseDown="sldMvBtnDown(32,event.shiftKey,this)" onMouseUp="sldMvBtnUp(32,this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="sldMvBtnOut(32,this)">
+				<b>&larr;</b>&nbsp;&nbsp;Move slide to the <b>LEFT</b>
+                </div>
+						<!-- "Move right" button  -->
+        	<div id="menuMvBtn42" class="menuDrpDwnSubItem" style="padding-left: 8px; width:253px"
+			    		onMouseDown="sldMvBtnDown(42,event.shiftKey,this)" onMouseUp="sldMvBtnUp(42,this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="sldMvBtnOut(42,this)">
+				<b>&rarr;</b>&nbsp;&nbsp;Move slide to the <b>RIGHT</b>
+                </div>
+        	<div class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- "Zoom OUT" button  -->
+			<div id="menuZBtn12" class="menuDrpDwnSubItem" style="padding-left: 12px; width:248px"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="sldZBtnClk(12)">
+				<b>&#8743;</b>&nbsp;&nbsp;Zoom <b>OUT</b>
+                </div>
+						<!-- "Zoom IN" button  -->
+			<div id="menuZBtn22" class="menuDrpDwnSubItem" style="padding-left: 12px; width:248px"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="sldZBtnClk(22)">
+				<b>&#8744;</b>&nbsp;&nbsp;Zoom <b>IN</b>
+                </div>
+        	<div class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- "No focus" box  -->
+			<div id="menuNoF" class="menuDrpDwnSubItem" 
+            			style="padding-left: 15px; width:245px; cursor: default; display: none">
+				No focusing for zoom-levels < ?
+                </div>
+						<!-- "Focus up" button  -->
+			<div id="menuFBtn12" class="menuDrpDwnSubItem" style="padding-left: 15px; width:245px"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="sldFPBtnClk(12)">
+				<b>&#8635;</b>&nbsp;&nbsp;Focus <b>UP</b>
+                </div>
+						<!-- "Focus down" button  -->
+			<div id="menuFBtn22" class="menuDrpDwnSubItem" style="padding-left: 15px; width:245px"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="sldFPBtnClk(22)">
+				<b>&#8634;</b>&nbsp;&nbsp;Focus <b>DOWN</b>
+                </div>
+						<!-- "Start focus cycle" button  -->
+			<div id="menuFocStartCycle" class="menuDrpDwnSubItem"
+						style="padding-left: 14px; width:246px; display:block"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="sldStrtFCyc()">
+				&#9658;&nbsp;&nbsp;<b>START</b> focal plane cycling
+                </div>
+						<!-- "Stop focus cycle" button  -->
+			<div id="menuFocStopCycle" class="menuDrpDwnSubItem"
+						style="padding-left: 12px; padding-bottom: 8px; padding-top: 0px; width:248px; display: none"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)" 
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="sldStopFCyc()">
+				<span style="font-size: 18px">&#x23F8;</span>&nbsp;&nbsp;<b>STOP</b> focal plane cycling
+                </div>
+ 						<!-- "Realign focal planes" button  -->
+			<div id="menuRealignFoc" class="menuDrpDwnSubItem"
+						style="padding-left: 14px; width:246px; display:block"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="sldRealignSldVw(sldVwI)">
+				<b>&#8597;</b>&nbsp;&nbsp;&nbsp;<b>REALIGN</b> focal planes
+				</div>
+        	<div id="menuViewFDiv2" class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- "GoTo" button  -->
+			<div id="menuGotoBtn" class="menuDrpDwnSubItem" style="padding-left: 15px; width:245px"
+			    		onMouseDown="menuBtnDown(this)" onMouseUp="menuBtnUp(this)"
+						onMouseOver="menuBtnOver(this)" onMouseOut="menuBtnOut(this)"
+                        onClick="gotoOpen()">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>GO TO ...</b>
+                </div>
+          </div>   <!-- end of "View" menu list  -->
+        </li>
+			<!-- "Slide Info" menu  -->
+    <li class="menuDrpDwnContainer"> 
+		<div id="menuSldInfoDrpDwn" class="menuDrpDwnItem"
+        		onMouseOver="menuUpdtSlideInfo()" onClick="menuUpdtSlideInfo()">
+			Slide Info
+            </div>
+		<div class="menuDrpDwnContent">
+						<!-- Slide number  -->
+        	<div id="menuSldNum" class="menuDrpDwnSubItem" >
+				Slide number:
+				<span class="menuInfoWindow" id="menuSldNumVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 28px; padding-left:5px">&nbsp;</span>
+                </div>
+						<!-- Slide name  -->
+        	<div id="menuSldName" class="menuDrpDwnSubItem" >
+				Slide name:
+				<span class="menuInfoWindow" id="menuSldNameVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 28px; padding-left:5px">&nbsp;</span>
+                </div>
+ 						<!-- Tissue  -->
+        	<div id="menuTissue" class="menuDrpDwnSubItem" >
+				Tissue:
+				<span class="menuInfoWindow" id="menuTissueVal" 
+                			style="margin-bottom: 4px; margin-top: -1px; min-width: 28px; max-width: 180px; padding-left:5px">
+					&nbsp;
+                    </span>
+                </div>
+ 						<!-- Species  -->
+        	<div id="menuSpecies" class="menuDrpDwnSubItem" >
+				Species:
+				<span class="menuInfoWindow" id="menuSpeciesVal" 
+                			style="margin-bottom: 4px; margin-top: -1px; min-width: 28px; max-width: 170px; padding-left:5px">
+					&nbsp;
+                    </span>
+                </div>
+ 						<!-- Stain  -->
+        	<div id="menuStain" class="menuDrpDwnSubItem" >
+				Stain:
+				<span class="menuInfoWindow" id="menuStainVal" 
+                			style="margin-bottom: 4px; margin-top: -1px; min-width: 28px; max-width: 190px; height: 20px; padding-left:5px">
+					&nbsp;
+                    </span>
+                </div>
+        	<div class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- Focal plane info  -->
+        	<div id="menuDrpDwnFP" class="menuDrpDwnSubItem" >
+				Focal plane:
+				<span id="menuDrpDwnFPTot" style="min-width:41px; text-align:right; float:right">
+                	&nbsp;(<font size="-1">&nbsp;&nbsp;&nbsp;</font>)
+                    </span>
+				<span class="menuInfoWindow" id="menuDrpDwnFPVal" style="margin-bottom: 4px; min-width: 22px">&nbsp;</span>
+            	</div>
+						<!-- Focal plane stpSize  -->
+        	<div id="menuFStp" class="menuDrpDwnSubItem" >
+				Focal plane separation:
+				<span style="text-align:right; float:right">
+                	&nbsp;&micro;m
+                    </span>
+				<span class="menuInfoWindow" id="menuFStpVal" style="margin-bottom: 4px; min-width: 22px">&nbsp;</span>
+            	</div>
+						<!-- Zoom-level info  -->
+        	<div id="menuDrpDwnZ" class="menuDrpDwnSubItem" >
+				Zoom level:
+				<span id="menuDrpDwnZTot" style="min-width:41px; text-align:right; float:right">
+					&nbsp;(<font size="-1">&nbsp;&nbsp;&nbsp;</font>)
+					</span>
+				<span class="menuInfoWindow" id="menuDrpDwnZVal" style="margin-bottom: 4px; min-width: 22px">&nbsp;</span>
+            	</div>
+						<!-- Zoom-level magnification -->
+        	<div id="menuDDZMag" class="menuDrpDwnSubItem" >
+				Magnification:
+				<span id="menuDDunits" style="width:41px; text-align:center; font-size: 12px; line-height: 0.9; float:right">
+                       <u>pixels</u><br>&micro;m
+                    </span>
+				<span class="menuInfoWindow" id="menuDDZMagVal" style="float:right; margin-bottom: 4px; min-width: 22px">&nbsp;</span>
+             	</div>
+						<!-- sldVwFoc info  -->
+        	<div id="menuSldVwFoc" class="menuDrpDwnSubItem" style="height: 46px" >
+				<div style="width: 40px; float:left; text-align:left; padding: 0; line-height: 0.9"> Viewer's &nbsp;focus &nbsp;point </div>
+                <div style="left: 25px ; top: 0px; height:25px; padding: 0px; margin-top: 0px; margin-bottom: 0px">
+					<span class="menuInfoWindow" id="menuFocX" style="min-width: 110px">&nbsp;</span>
+					<span style="text-align:right; float:right">x:&nbsp;&nbsp;</span>
+                    </div>
+                <div style="left: 25px; bottom: 0px; height: 20px; padding: 0px; margin-bottom: 0px; margin-top: 0px">
+					<span class="menuInfoWindow" id="menuFocY" style="min-width: 110px">&nbsp;</span>
+					<span style="text-align:right; float:right">y:&nbsp;&nbsp;</span>
+                    </div>
+            	</div>
+        	</div>   <!--  end of "Slide Info" drop-down contents  -->
+       </li>    <!--  end of "Slide Info" menu item  -->
+
+						<!-- "Settings" menu  -->
+    <li class="menuDrpDwnContainer"> 
+    	<div id="menuSettingDrpDwn" class="menuDrpDwnItem"
+					onMouseOver="menuUpdtSettingDisplay()" onClick="menuUpdtSettingDisplay()">
+			Settings
+            </div>
+    	<div class="menuDrpDwnContent">
+						<!-- "Tile Buffer size" window  -->
+        	<div id="menuTileBuf" class="menuDrpDwnSubItem" >
+				Tile buffer:
+				<span class="menuInfoWindow" id="menuTileBufVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 22px">&nbsp;</span>
+                </div>
+						<!-- F Buffer size" window  -->
+        	<div id="menuFBuf" class="menuDrpDwnSubItem">
+				Focal plane buffer:
+				<span class="menuInfoWindow" id="menuFBufVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 22px">&nbsp;</span>
+                </div>
+						<!-- MaxF size" window  -->
+        	<div id="menuMaxF" class="menuDrpDwnSubItem">
+				Maximum focal planes loaded:
+				<span class="menuInfoWindow" id="menuMaxFVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 22px">&nbsp;</span>
+                </div>
+						<!-- Z Buffer size" window  -->
+        	<div id="menuZBuf" class="menuDrpDwnSubItem" >
+				Zoom-level buffer:
+				<span class="menuInfoWindow" id="menuZBufVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 22px">&nbsp;</span>
+                </div>
+						<!-- FxZ Buffer size" window  -->
+        	<div id="menuFZBuf" class="menuDrpDwnSubItem" >
+				F &times; Z buffer:
+				<span class="menuInfoWindow" id="menuFZBufVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 22px">&nbsp;</span>
+                </div>
+        	<div id="menuSetFDiv1" class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- "ZFLimit size" window  -->
+        	<div id="menuZFLiimit" class="menuDrpDwnSubItem" >
+				Zoom-level limit for focus:
+				<span class="menuInfoWindow" id="menuZFLimitVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 22px">&nbsp;</span>
+                </div>
+						<!-- "F Default" window  -->
+        	<div id="menuFDef" class="menuDrpDwnSubItem" >
+				Default focal plane:
+				<span class="menuInfoWindow" id="menuFDefVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 22px">&nbsp;</span>
+                </div>
+						<!-- Change focus settings  -->
+	       	<div id="menuFChgSet" class="menuClickable menuDrpDwnSubItem"
+                        onClick="chgSetOpen('chgFSetting')">
+				Change focus settings <b>...</b>
+                </div>
+						<!-- Disable / Enable focusing  -->
+	       	<div id="menuEnDisableF" class="menuClickable menuDrpDwnSubItem"
+                        onClick="sldEnDisableF()">
+				Disable focusing
+                </div>
+			<div class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- Disable / Enable warningBox bell  -->
+	       	<div id="menuDisEnableBell" class="menuClickable menuDrpDwnSubItem"
+                        onClick="menuSetBell()">
+				&nbsp;<b><b><span id="menuBellNote">&#9834;</span></b></b>
+                &nbsp;Turn <b><span id="menuBellOnOffTxt">OFF</span></b> warning box bell
+                </div>
+			<div class="menuDrpDwnSubItem menuDivider"></div>
+			<div class="menuSideContainer"> <!-- "cache" side container => menuDrpDwnSubItem at end of <div>  -->
+				<div class="menuSideContent">
+							<!-- "Cache size" window  -->
+	    	    	<div id="menuCacheSz" class="menuClickable menuDrpDwnSubItem"
+    	    	                onClick="menuUpdtCacheSz()">
+						Cache size:
+						<span class="menuInfoWindow" id="menuCacheSzVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 28px">&nbsp;</span>
+	            	    </div>
+								<!-- "Show cache" button  -->
+	        		<div id="menuCacheList" class="menuClickable menuDrpDwnSubItem"
+    	        	            onClick="menuShowCacheList()">
+						Show cache list <b>...</b>
+	        	        </div>
+								<!-- "Clear cache" button  -->
+	        		<div id="menuClearCache" class="menuClickable menuDrpDwnSubItem"
+    	        	            onClick="sldClearCache()">
+						Clear cache
+	        	        </div>
+								<!-- Maximum cache size" window  -->
+	        		<div id="menuMaxCache" class="menuDrpDwnSubItem" >
+						Maximum cache size:
+						<span class="menuInfoWindow" id="menuMaxCacheVal" style="margin-bottom: 4px; margin-top: -1px; min-width: 28px">&nbsp;</span>
+	        	        </div>
+					</div>  <!-- End of "cache" side content  -->
+            	<div id="menuCacheSideItm" class="menuDrpDwnSubItem menuSideItem">
+                	Cache settings 
+                    	<span style="float:right; margin-right:32px; letter-spacing:-8px">
+                        	&#10132;&#10148;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                    </div>
+				</div>  <!-- End of "cache" side container  -->
+			<div class="menuSideContainer"> <!-- "View-planes" side container => menuDrpDwnSubItem at end of <div>  -->
+				<div class="menuSideContent">
+						<!-- "View-plane size" window  -->
+		        	<div id="menuSldVwSz" class="menuDrpDwnSubItem" >
+						View-planes loaded:
+						<span class="menuInfoWindow" id="menuSldVwSzVal" style="margin-bottom: 4px; min-width: 22px">&nbsp;</span>
+		            	</div>
+ 								<!-- "Show view-planes" button  -->
+			       	<div id="menuSldVwList" class="menuClickable menuDrpDwnSubItem"
+        		                onClick="menuShowSldVwList()">
+						Show view-plane list <b>...</b>
+		                </div>
+								<!-- "Show missing tiles" button  -->
+			       	<div id="menuShwTiles" class="menuClickable menuDrpDwnSubItem"
+        		                onClick="waitBoxOpen()">
+						Show missing tiles <b>...</b>
+		                </div>
+								<!-- "Restrict F" button  -->
+		        	<div id="menuRestrictF" class="menuClickable menuDrpDwnSubItem"
+        		                onClick="sldRestrictFZ(false,true)">
+						Remove excess focal planes
+		                </div>
+					</div>  <!-- End of "View-planes" side content  -->
+            	<div id="menuVwPlaneSideItm" class="menuDrpDwnSubItem menuSideItem">
+                	View-plane settings
+                    	<span style="float:right; margin-right:32px; letter-spacing:-8px">
+                        	&#10132;&#10148;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                    </div>
+				</div>  <!-- End of "View-planes" side container  -->
+			<div class="menuSideContainer"> <!-- "Destruction arrays" side container => menuDrpDwnSubItem at end of <div>  -->
+				<div class="menuSideContent">
+						<!-- "Destruction array size" window  -->
+		        	<div id="menuDestArrSz" class="menuDrpDwnSubItem" >
+						Destroy array size:
+						<span class="menuInfoWindow" id="menuDestArrSzVal" style="margin-bottom: 4px; min-width: 22px">&nbsp;</span>
+		            	</div>
+        			<div id="menuPurgArrSz" class="menuDrpDwnSubItem" >
+						Purgatory array size:
+						<span class="menuInfoWindow" id="menuPurgArrSzVal" style="margin-bottom: 4px; min-width: 22px">&nbsp;</span>
+        		    	</div>
+								<!-- "Clear DestArr" button  -->
+		        	<div id="menuClearDestArr" class="menuClickable menuDrpDwnSubItem"
+        		                onClick="destClearArr()">
+						Clear destruction arrays
+		                </div>
+					</div>  <!-- End of "Destruction arrays" side content  -->
+            	<div id="menuVwPlaneSideItm" class="menuDrpDwnSubItem menuSideItem">
+                	Destruction array settings
+                    	<span style="float:right; margin-right:32px; letter-spacing:-8px">
+                        	&#10132;&#10148;&nbsp;&nbsp;&nbsp;&nbsp;
+                            </span>
+                    </div>
+				</div>  <!-- End of "destruction array" side container  -->
+        	<div class="menuDrpDwnSubItem menuDivider"></div>
+ 						<!-- "Change settings" button  -->
+	       	<div id="menuChgSet" class="menuClickable menuDrpDwnSubItem"
+                        onClick="chgSetOpen('chgSetting')">
+				Change settings <b>...</b>
+                </div>
+            </div>  <!--  end of "Settings" drop-down contents  -->
+		</li>   <!--  end of "Settings" menu item  -->
+
+
+						<!-- "About" menu  -->
+    <li class="menuDrpDwnContainer"> 
+    	<div class="menuDrpDwnItem">
+			About
+            </div>
+    	<div class="menuDrpDwnContent">
+						<!-- "About MICROSCOPE" btn  -->
+	       	<div id="menuAboutMicroscope" class="menuClickable menuDrpDwnSubItem"
+                        onClick="aboutMicroscopeOpen()">
+				About PNWU Microscope <b>...</b>
+                </div>
+						<!-- "About PNWU" btn  -->
+	       	<div id="menuAboutPNWU" class="menuClickable menuDrpDwnSubItem"
+                        onClick="aboutPNWUOpen()">
+				About PNWU <b>...</b>
+                </div>
+						<!-- "More about PNWU link  -->
+	       	<div id="menuMorePNWU" class="menuClickable menuDrpDwnSubItem" style="padding-top: 3px; height: 22px"
+					onClick="window.open('https://www.pnwu.edu/inside-pnwu/about-us','_blank')" >
+				More about PNWU (<span style="display: inline-block; text-align:center; font-size: 12px; line-height: 0.9">
+                       go to:&nbsp;<br>www.pnwu.edu</span>)
+                </div>
+						<!-- "About PNWU" btn  -->
+	       	<div id="menuSponsors" class="menuClickable menuDrpDwnSubItem"
+                        onClick="aboutSponsorOpen()">
+				About our sponsors <b>...</b>
+                </div>
+        	<div class="menuDrpDwnSubItem menuDivider"></div>
+						<!-- "Using Mouse" btn  -->
+	       	<div id="menuAboutMusCntrl" class="menuClickable menuDrpDwnSubItem"
+                        onClick="aboutMusCntrlOpen()">
+				Using a Computer Mouse <b>...</b>
+                </div>
+						<!-- "Using TOUCHSCREEN" btn  -->
+	       	<div id="menuAboutTchScr" class="menuClickable menuDrpDwnSubItem"
+                        onClick="aboutTchScrOpen()">
+				Using a Touchscreen <b>...</b>
+                </div>
+            </div>  <!--  end of "About" drop-down contents  -->
+		</li>   <!--  end of "Settings" menu item  -->
+	</ul>
+			<!--  menuMain2 is the right-half of the menu, contining the position-information boxes-->
+<ul id="menuMain2" class="menu" style="border-left: 0px; left:50%">
+				<!--  information windows on main menu bar => these float right  -->
+    <li id="menuYPos" class="menuInfoItem">y:&nbsp;&nbsp;<span class="menuInfoWindow" id="menuSldYPos"> <font style="font-size:14px">&nbsp;</font> </span>
+		</li>
+    <li id="menuXPos" class="menuInfoItem">x:&nbsp;&nbsp;<span class="menuInfoWindow" id="menuSldXPos"> <font style="font-size:14px">&nbsp;</font> </span>
+		</li>
+	<li id="menuZ" class="menuInfoItem">zoom level:&nbsp;&nbsp;
+        <span id="menuSldZTot" style="float:right; min-width:41px; text-align:right">(<font size="-1">&nbsp;&nbsp;&nbsp;</font>)</span>
+    	<span class="menuInfoWindow" id="menuSldZ" style="min-width: 22px">&nbsp;</span>
+		</li>
+	<li id="menuFP" class="menuInfoItem">focal plane:&nbsp;&nbsp;
+        <span id="menuSldFPTot" style="float:right; min-width:41px; text-align:right">(<font size="-1">&nbsp;&nbsp;&nbsp;</font>)</span>
+    	<span class="menuInfoWindow" id="menuSldFP" style="min-width: 22px">&nbsp;</span>
+		</li>
+    <li id="menuMainSldNm" class="menuInfoItem">slide:&nbsp;&nbsp;
+    	<span class="menuInfoWindow" id="menuMainSldNmTxt" style="min-width: 90px"><font style="font-size:14px">&nbsp;</font></span>
+		</li>
+</ul>
+
+
+<p>&nbsp; </p>
+<p id="jrTest" style="background-color: rgba(192, 255, 192, 0.5); font-size:11px"></p>
+
+
+		<!-- sldBndBox is a bounding box for slideView -->
+<div id="sldBndBox" class="boxSldBoundary" style="top: 180px; left:100px; width: 1600px; height: 700px; display: none">
+		<!-- 1st slideView plane now (10/28/19) is created by call to sldAddPlane() from sldInitializeView()  -->
+	<div id="sldCreditBox" class="creditBoxClass"></div>
+    	<!-- tchWaitClk1&2 are wait "icons" used for two fingers on slideView during "wait state -->
+    	<!-- tchWaitClk3&4 are wait "icons" used by "wait" menu +/or navigator buttons during "wait state -->
+    <img id="tchWaitClk1" class="sldWaitClk" src="../images/wClk0" alt="">
+    <img id="tchWaitClk2" class="sldWaitClk" src="../images/wClk0" alt="">
+	</div>
+
+<div id="IntroPage" class="centerIntro">
+  <span id="intPgTxt" style="position:absolute; display:inline-block; font-weight:bold">PNWU&nbsp;Virtual&nbsp;Microscope</span>
+  <img id="intPgSeal" src="../images/PNWU_seal.png" alt="" style="position:absolute; height: 500px; width: 500px">
+  </div>
+
+    	<!-- tchWaitClk3&4 are wait "icons" used by "wait" menu +/or navigator buttons during "wait state -->
+    	<!-- these are children of the DOM ('document.body') because they are used by navigator & menu -->
+<img id="tchWaitClk3" class="sldWaitClk" src="../images/wClk0" alt="">
+<img id="tchWaitClk4" class="sldWaitClk" src="../images/wClk0" alt="">
+
+
+<div id="sldSelBox" class="sldSelBoxClass">Choose a slide:&nbsp;&nbsp;<br/>
+	<div class="sldSelDrpDwnContainer">
+    	<div class="sldSelInpBoxClass">
+        	<div class="sldSelInpBoxArrowClass">&nbsp;&#709;&nbsp;</div>
+        	</div>
+		<table id="sldSelList" class="sldSelTable">
+			<tr class="sldSelHdrItem">
+				<th class="sldSelHdrItem" style="width: 45px; font-size:10px; line-height: 0.8">
+					slide number
+					</th>
+				<th class="sldSelHdrItem" style="width:300px">Slide</th>
+				<th class="sldSelHdrItem" style="width: 28px; font-size:10px; line-height: 0.8">
+					focal planes
+					</th>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+
+
+	<!--  *************************************  -->
+	<!--  *****    create copyright box   *****  -->
+	<!--  *************************************  -->
+
+<div id="cpyRtBox" class="cpyRtBxClass" style="display:none" 
+				onMouseOver="prgCpyRtBxStopFade()" onMouseOut="prgCpyRtBxStrtFade()">
+	<img src="../images/PNWU_seal.png" alt="" 
+    		style="height: 180px; width: 180px; float:left; margin: 10px 0px 10px 5px">
+	<button class="infoButton" 
+    		style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px;  border-width:4px" 
+       		onClick="prgCpyRtBxClose()">
+		<b>X</b>
+		</button>
+	<div class="cpyRtHdrClass">
+   		PNWU Virtual Microscope
+		</div>
+	<div class="cpyRtTxtClass">
+   	    	&nbsp;&nbsp;&nbsp;&nbsp;See (<font style='font-size:12px'>on menu</font>):<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;<font style='font-size:14px'>About&quot;&rarr;&quot;About PNWU Microscope&quot;</font>
+           	for copyright &amp; licensing information.
+ 		</div>
+	</div>
+
+
+	<!--  ********************************  -->
+	<!--  *****    create warn box   *****  -->
+	<!--  ********************************  -->
+
+<div id="warnBox" class="warnBoxClass" onMouseOver="warnBoxHold()" onMouseOut="warnBoxStrtFade()">
+	<audio autoplay id="warnBell" src="../images/Beep.wav" preload="auto"></audio>
+	<div id="warnBoxHdr" class="warnHdrClass">
+        <span id="warnBoxHdrTxt" class="warnHdrTxtClass"></span>
+        <button class="infoButton" style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+       		onClick="warnBoxClose()">
+			<b>X</b>
+			</button>
+        </div>
+	<div id="warnBoxText" class="warnTxtBoxClass"></div>
+    </div>
+
+
+
+
+	<!--  *************************************  -->
+	<!--  *****      create Wait box      *****  -->
+	<!--  *************************************  -->
+
+
+<div id="waitBox" class="waitBoxClass" style="top:300px; left: 800px; width: cpx; display: none">
+	<div id="waitBoxHdr" class="waitHdrClass">
+		<span id="waitBoxHdrTxt" class="waitHdrTxtClass"><font style="font-size: 28px"><b>Missing Image Tiles</b></font></span>
+        <button class="infoButton" 
+			style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+       		onClick="waitBoxClose()">
+			<b>X</b>
+			</button>
+ 		<button id="waitBoxMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="infoBxMusOut(this)"
+    			onMouseDown="infoBxMusDwn(this,event)" onMouseUp="infoBxMusUp(this)">
+        	Press here to move
+			</button>
+      </div>
+	<div id="waitBodyBox" class="waitBodyClass" style="min-height: 40px"></div>
+	<div class="aboutBotBox" style="width: 330px">
+		<button class="infoButton" style="width:140px; margin-left:16px; margin-top:3px; float:left"
+        	onClick="waitBoxClose()">
+        	Close
+            </button>
+		<button class="infoButton" style="width:140px; margin-right:16px; margin-top:3px; float:right"
+        	onClick="waitMkBox()">
+        	Update
+            </button>
+		</div>
+		
+   </div>
+
+
+
+
+	<!--  **************************************  -->
+	<!--  *****      create About box      *****  -->
+	<!--  **************************************  -->
+
+
+<div id="aboutBox" class="aboutBoxClass" style="top:100px; left: 600px; width: 700px">
+	<div id="aboutBoxHdr" class="aboutHdrClass">
+		<span id="aboutBoxHdrTxt" class="aboutHdrTxtClass"><span id="aboutBoxHdrTitle"></span></span>
+        <button class="infoButton" 
+			style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+       		onClick="document.getElementById('aboutBox').style.display = 'none'">
+			<b>X</b>
+			</button>
+ 		<button id="aboutBoxMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="infoBxMusOut(this)"
+    			onMouseDown="infoBxMusDwn(this,event)" onMouseUp="infoBxMusUp(this)">
+        	Press here to move
+			</button>
+      </div>
+	<div id="aboutBoxText" class="aboutBodyClass">	
+		</div>
+	<div id="aboutCloseDiv" class="aboutBotBox">
+		<button id="aboutCloseBtn" class="infoButton aboutButton" style="width:140px"
+        	onClick="document.getElementById('aboutBox').style.display = 'none'">
+        	Close
+            </button>
+		</div>
+		
+   </div>
+
+
+
+	<!--  ********************************  -->
+	<!--  *****   create navigator   *****  -->
+	<!--  ********************************  -->
+
+	<!-- navigator is hidden (style.display = none) until slideView is initialized -->
+
+<div id="sldNavigator" class="navClass" style="display:none"> 
+		<!-- mouse movement arrows  -->
+	<div id="navMvBtn16" class="navVertArrow navClickable" style="top:0px" 
+    		onMouseDown="sldMvBtnDown(16,event.shiftKey,this)" onMouseUp="sldMvBtnUp(16,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(16,this)">
+		<img id="navMvBtnImg16" src="../images/trpl_arrowUpBlk2.png" alt="" height="16px" width="70" style="pointer-events: none">
+		</div>
+	<div id="navMvBtn11" class="navVertArrow navClickable" style="top:19px" 
+    		onMouseDown="sldMvBtnDown(11,event.shiftKey,this)" onMouseUp="sldMvBtnUp(11,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(11,this)">
+		<img id="navMvBtnImg11" src="../images/arrowUpBlk2.png" alt="" height="16px" width="70px" style="pointer-events: none">
+		</div>
+	<div id="navMvBtn21" class="navVertArrow navClickable" style="bottom:19px" 
+    		onMouseDown="sldMvBtnDown(21,event.shiftKey,this)" onMouseUp="sldMvBtnUp(21,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(21,this)">
+		<img id="navMvBtnImg21" src="../images/arrowDownBlk2.png" alt="" height="16px" width="70px" style="pointer-events: none">
+		</div>
+	<div id="navMvBtn26" class="navVertArrow navClickable" style="bottom:0px" 
+    		onMouseDown="sldMvBtnDown(26,event.shiftKey,this)" onMouseUp="sldMvBtnUp(26,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(26,this)">
+		<img id="navMvBtnImg26" src="../images/trpl_arrowDownBlk2.png" alt="" height="16px" width="70" style="pointer-events: none">
+		</div>
+	<div id="navMvBtn36" class="navSideArrow navClickable" style="left:0px"  
+    		onMouseDown="sldMvBtnDown(36,event.shiftKey,this)" onMouseUp="sldMvBtnUp(36,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(36,this)">
+		<img id="navMvBtnImg36" src="../images/trpl_arrowLeftBlk2.png" alt="" height="70px" width="16" style="pointer-events: none">
+		</div>
+	<div id="navMvBtn31" class="navSideArrow navClickable" style="left:19px"  
+    		onMouseDown="sldMvBtnDown(31,event.shiftKey,this)" onMouseUp="sldMvBtnUp(31,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(31,this)">
+		<img id="navMvBtnImg31" src="../images/arrowLeftBlk2.png" alt="" height="70px" width="16" style="pointer-events: none"">
+		</div>
+	<div id="navMvBtn41" class="navSideArrow navClickable" style="right:19px"  
+    		onMouseDown="sldMvBtnDown(41,event.shiftKey,this)" onMouseUp="sldMvBtnUp(41,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(41,this)">
+		<img id="navMvBtnImg41" src="../images/arrowRightBlk2.png" alt="" height="70px" width="16" style="pointer-events: none">
+		</div>
+	<div id="navMvBtn46" class="navSideArrow navClickable" style="right:0px"  
+    		onMouseDown="sldMvBtnDown(46,event.shiftKey,this)" onMouseUp="sldMvBtnUp(46,this)"
+            onMouseOver="navBtnOver(this)" onMouseOut="sldMvBtnOut(46,this)">
+		<img id="navMvBtnImg46" src="../images/trpl_arrowRightBlk2.png" alt="" height="70px" width="16" style="pointer-events: none">
+		</div>
+
+		<!-- Focus Controls -->
+	<div id="navFocCntrl" class="navMiddleBox" style="top: 40px; left: 40px">
+ 		<div class="navHdr navText navTxtNarrow" style="left:-5px">
+        	<b>FOCUS</b>
+            </div>
+ 		<div id="navNoFocus" class="navMidResponseBox" style="top: 32px; height: 90px; display: block; border: solid 1px rgba(160,160,160,0.9); ">
+        	<div class="navInsideBox" style="font-size: 14px; background-color: rgba(224,224,224,0.8);
+            		width: 78px; height: 85px;
+                    padding: 1px 2px; cursor: default"> 
+        		<span id="navNoFocusTxtBx" class="navText">Focusing not available for zoom-levels < ?;</span>
+                </div>
+            </div>
+        <div id="navFPbtn11" class="navMidResponseBox navClickable" style="top: 32px; height: 30px; display: none"
+        		onMouseDown="navBtnDown(this)" onMouseUp="navBtnUp(this)"
+        		onMouseOver="navBtnOver(this)" onMouseOut="navBtnOut(this)"
+                onClick="sldFPBtnClk(11)">
+			<div class="navInsideBox" style="font-size: 20px; top: -3px"><span class="navText"><b>UP</b></span></div>
+   	    	<div class="navInsideBox" style="font-size: 12px; bottom: -2px"><span class="navText">Focus Up</span></div>
+            </div>
+        <div id="navFPbtn21" class="navMidResponseBox navClickable" style="top: 63px; height: 30px; display: none"
+        		onMouseDown="navBtnDown(this)" onMouseUp="navBtnUp(this)"
+        		onMouseOver="navBtnOver(this)" onMouseOut="navBtnOut(this)"
+                onClick="sldFPBtnClk(21)">
+			<div class="navInsideBox" style="font-size: 20px; top: -3px"><span class="navText"><b>DOWN</b></span></div>
+   	    	<div class="navInsideBox" style="font-size: 12px; bottom: -2px"><span class="navText">Focus Down</span></div>
+            </div>
+        <div id="navFocStartCycle" class="navMidResponseBox navClickable" style="top: 94px; height: 28px; display: none"
+        		onMouseDown="navBtnDown(this)" onMouseUp="navBtnUp(this)"
+        		onMouseOver="navBtnOver(this)" onMouseOut="navBtnOut(this)"
+                onClick="sldStrtFCyc()">
+			<div class="navInsideBox" style="font-size: 24px; left: -5px; width: 35px; top: -1px">&#9658;</div>
+   	    	<div class="navInsideBox" style="font-size: 10px; right: -5px; width: 70px">
+            	<span class="navText navTxtNarrow">Cycle through focal planes</span>
+                </div>
+            </div>
+        <div id="navFocStopCycle" class="navMidResponseBox navClickable" style="top: 94px; height: 28px; display:none"
+        		onMouseDown="navBtnDown(this)" onMouseUp="navBtnUp(this)"
+        		onMouseOver="navBtnOver(this)" onMouseOut="navBtnOut(this)"
+                onClick="sldStopFCyc()">
+			<div class="navInsideBox" style="font-size: 24px; left:-5px; top: -6px; width: 35px">&#x23F8;</div>
+   	    	<div class="navInsideBox" style="font-size: 10px; right: -5px; width: 70px">
+            	<span class="navText navTxtNarrow">Stop focal- plane&nbsp;cycling</span>
+                </div>
+            </div>
+        <div id="navMusWhlFBox" class="navMidResponseBox navNoWait" style="bottom:0px; height: 28px"
+					onClick="sldMusWheelSelect(event,'f')">
+			<div id="navMusWhlFxBx" onClick="sldMusWheelSelect(event,'f')">
+		        <input type="radio" name="navMusWheel" id="navMusWhlFRadio" class="navInsideBox" value="f"
+						style="top: 7px; left: 4px; cursor: pointer" onClick="sldMusWheelSelect(event,'f')">
+					<label for="navMusWhlFRadio" id="navMusWhlFLbl" style="width: 5px; height: 5px"></label>
+            	<span id="navMusWhlFTxt" class="navInsideBox navClickable navText navTxtNarrow" 
+							onClick="sldMusWheelSelect(event,'f')"
+            				style="display:inline-block; left:15px; width:70px; background-color:transparent; font-size:11px; top:0px; padding:0px">
+	            	Mouse wheel for focal plane
+    	            </span>
+                </div>
+            </div>
+    	</div>
+
+		<!--   Zoom Controls  -->
+	<div id="navZoomCntrl" class="navMiddleBox" style="top: 40px; right: 40px">
+ 		<div class="navHdr navText navTxtNarrow">
+			<b>ZOOM</b>
+            </div>
+        <div id="navZbtn11" class="navMidResponseBox navClickable" style="top: 32px; height: 45px"
+        		onMouseDown="navBtnDown(this)" onMouseUp="navBtnUp(this)"
+        		onMouseOver="navBtnOver(this)" onMouseOut="navBtnOut(this)"
+                onClick="sldZBtnClk(11)">
+			<div id="navZ11InsideTop" class="navInsideBox" style="font-size: 20px; top: 4px">
+            	<span class="navText"><b>OUT</b></span>
+                </div>
+   	    	<div id="navZ11InsideBot" class="navInsideBox" style="font-size: 12px; bottom: 4px">
+            	<span class="navText">Zoom Out</span>
+                </div>
+            </div>
+        <div id="navZbtn21" class="navMidResponseBox navClickable" style="top: 78px; height: 44px"
+        		onMouseDown="navBtnDown(this)" onMouseUp="navBtnUp(this)"
+        		onMouseOver="navBtnOver(this)" onMouseOut="navBtnOut(this)"
+                onClick="sldZBtnClk(21)">
+			<div id="navZ21InsideTop" class="navInsideBox" style="font-size: 20px; top: 4px">
+            	<span class="navText"><b>IN</b></span>
+                </div>
+   	    	<div id="navZ21InsideBot" class="navInsideBox" style="font-size: 12px; bottom: 4px">
+            	<span class="navText">Zoom In</span>
+                </div>
+            </div>
+        <div id="navMusWhlZBox" class="navMidResponseBox navNoWait" style="bottom:0px; height: 28px"
+						onClick="sldMusWheelSelect(event,'z')">
+			<div id="navMusWhlZxBx" onClick="sldMusWheelSelect(event,'z')">  
+				<input type="radio" name="navMusWheel" id="navMusWhlZRadio" class="navInsideBox" value="z" checked
+						style="top: 7px; left: 4px; cursor: pointer" onClick="sldMusWheelSelect(event,'z')">
+ 					<label for="navMusWhZRadio" id="navMusWhlZLbl" style="width: 5px; height: 5px"></label>
+				<span id="navMusWhlZTxt" class="navInsideBox navClickable navText navTxtNarrow" 
+						onClick="sldMusWheelSelect(event,'z')"
+            			style="display:inline-block; left:15px; width:70px; background-color:transparent; font-size:11px; top:0px; padding:0px">
+					Mouse wheel for zoom level
+					</span>
+				</div>
+            </div>
+    	</div>
+ 	</div>
+
+
+
+	<!--  *************************************  -->
+	<!--  *****      create GoTo box      *****  -->
+	<!--  *************************************  -->
+
+<div id="gotoBox" class="gotoBoxClass" style="top:85px; left: 300px">
+	<div id="gotoBoxHdr" class="warnHdrClass">
+		<span id="gotoBoxHdrTxt" class="gotoHdrTxtClass">Go To</span>
+        <button class="infoButton" 
+			style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+       		onClick="document.getElementById('gotoBox').style.display = 'none'">
+			<b>X</b>
+			</button>
+ 		<button id="gotoBoxMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="infoBxMusOut(this)"
+    			onMouseDown="infoBxMusDwn(this,event)" onMouseUp="infoBxMusUp(this)">
+        	Press here to move
+			</button>
+      </div>
+	<div id="gotoBoxText" class="gotoBodyClass">	
+		<div style="left: 25px ; top: 0px; height:30px; padding: 0px; margin-top: 0px; margin-bottom: 0px">
+			<input type="text" class="gotoInputBx" id="gotoX" onChange="gotoVerify('X',this.value)">
+            	&nbsp;
+                </input>
+			<span style="text-align:right; float:right; margin-top:7px">
+            	new x-position (<font size="-1">pixels</font>):&nbsp;
+                </span>
+			</div>
+		<div style="left: 25px; bottom: 0px; height: 30px; padding: 0px; margin-bottom: 0px; margin-top: 0px">
+			<input type="text" class="gotoInputBx" id="gotoY" onChange="gotoVerify('Y',this.value)">
+            	&nbsp;
+                </input>
+			<span style="text-align:right; float:right; margin-top:7px">
+            	new y-position (<font size="-1">pixels</font>):&nbsp;
+                </span>
+			</div>
+		<div style="position:absolute; top:75px">
+        <button class="infoButton" style="position:absolute; left: 35px; width: 100px; height: 45px; padding: 0px 0px 2px; font-size: 16px; line-height:0.9"
+       		onClick="gotoMove(document.getElementById('gotoX').value,document.getElementById('gotoY').value)">
+            Go to new<br>position
+            </button>
+        <button class="infoButton" style="position:absolute; left: 155px; width: 100px; height: 45px; padding: 0px 0px 2px; font-size: 16px"
+       		onClick="document.getElementById('gotoBox').style.display = 'none'">
+            Cancel
+            </button>
+            </div>
+		</div>
+   </div>
+
+
+
+
+	<!--  *************************************  -->
+	<!--  *****   create cache info box   *****  -->
+	<!--  *************************************  -->
+
+	<!--  NOTE index in infoBoxList for this infoBox ("infoBoxCache") is 0 -->    
+
+<div id="infoBoxCache" class="infoBox" style="top: 3px; left: 360px; height: 700px; display: none">
+		<!--  Top of the infoBox  => includes a title, a 'close' button, and the infoMvBtn button -->
+    <button class="infoButton" style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+       		onClick="infoBoxClose(0)">
+		<b>X</b>
+		</button>
+	<button id="infoBoxCacheMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="infoBxMusOut(this)"
+    		onMouseDown="infoBxMusDwn(this,event)" onMouseUp="infoBxMusUp(this)">
+        Press here to move
+        </button>
+	<h1 align="center" style="margin-bottom:3px; margin-top: 3px; font-size: 32px">Cache List</h1>
+
+		<!--  This div contains the 'menu' for this infoBox ("infoBoxCache")  -->
+    <div style="width: 100%; box-sizing: border-box; position: absolute;
+			background-color: rgb(255,245,245); border:solid; border-width:5px; border-color: rgb(224,224,224)">
+    	<button id="infoCacheBtnSortBy" class="infoButton" onClick="infoBoxSortBy(0)" value="0">
+        	Sort by image-ID
+            </button>
+    	<button id="infoCacheBtnSortDir" class="infoButton" onClick="infoBoxFlipOrder(0)" value="1">
+        	Sort large-to-small
+            </button>
+    	<button class="infoButton" onClick="infoBoxClose(0)">
+        	Close
+            </button>
+		<div style="float:right; border:solid; border-width: 2px; border-color: rgb(128,128,128);
+				padding:3px; padding-bottom: 1px; padding-top: 2px; background-color: rgb(248,248,248)">
+			Cache Size:&nbsp;&nbsp;
+			<span class="menuInfoWindow" id="infoBoxCacheSzVal" style="float:none; margin-bottom: 1px; margin-top: 1px; min-width: 28px">&nbsp;</span>
+			</div>
+        </div>
+
+		<!--  This div contains the 'contents' for this infoBox ("infoBoxCache")  -->
+ 	<div id="infoCacheContent" class="infoContent" style="height: 100%; overflow: visible">
+    	<div id="infoCacheSubHead" class="infoSubContent" 
+					style="height: 20px; width: 208px; margin-left: 175px; overflow:hidden; border-bottom: hidden;
+                    	border-right: hidden"
+                    >
+			<table class="tabCache">
+            	<tr class="tabCache"><th id="tabCacheHdInd" class="tabCache" style="width: 49px;">&darr;index</th>
+					<th class="tabCache" id="tabCacheHdImg" style="width: 139px">&nbsp;image ID</th></tr>
+                </table>
+			</div>
+    	<div id="infoCacheSubBody" class="infoSubContent" 
+					style="top: 20px; width: 225px; margin-left: 175px; overflow-y:auto; border-top: 1px solid black;
+                    	height: 300px"
+                    >
+			</div>
+        </div>
+	</div>  <!-- end of Cache infoBox div -->
+
+
+		<!--  *****************************************  -->
+		<!--  *****   create slideView info box   *****  -->
+		<!--  *****************************************  -->
+	<!--  NOTE index in infoBoxList for this infoBox ("infoBoxSldVw") is 1 -->    
+<div id="infoBoxSldVw" class="infoBox" style="top: 5px; left: 360px; height: 700px; width: 1200px; display: none">
+		<!--  Top of the infoBox  => includes a title, a 'close' button, and the infoMvBtn button -->
+    <button class="infoButton" style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+       		onClick="infoBoxClose(1)">
+		<b>X</b>
+		</button>
+	<button id="infoBoxSVwMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="infoBxMusOut(this)"
+    		onMouseDown="infoBxMusDwn(this,event)" onMouseUp="infoBxMusUp(this)">
+        Press here to move
+        </button>
+	<h1 align="center" style="margin-bottom:3px; margin-top: 3px; font-size: 32px">View-plane List</h1>
+
+		<!--  This div contains the 'menu' for this infoBox ("infoBoxSldVw")  -->
+    <div style="width: 100%; box-sizing: border-box; position: absolute;
+			background-color: rgb(255,245,245); border:solid; border-width:5px; border-color: rgb(224,224,224)">
+    	<button id="infoSVwBtnSortBy" class="infoButton" onClick="infoBoxSortBy(1)" value="0">
+        	Sort by F then Z
+            </button>
+    	<button id="infoSVwBtnSortDir" class="infoButton" onClick="infoBoxFlipOrder(1)" value="1">
+        	Sort large-to-small
+            </button>
+    	<button class="infoButton" onClick="infoBoxClose(1)">
+        	Close
+            </button>
+		<div style="float:right; border:solid; border-width: 2px; border-color: rgb(128,128,128);
+				padding:3px; padding-bottom: 1px; padding-top: 2px; background-color: rgb(248,248,248)">
+			Number of view-planes loaded:&nbsp;&nbsp;
+			<span class="menuInfoWindow" id="infoBoxSVwSzVal" style="float:none; margin-bottom: 1px; margin-top: 1px; min-width: 28px">&nbsp;</span>
+			</div>
+        </div>
+
+		<!--  This div contains the 'contents' for this infoBox ("infoBoxSldVw"  -->
+ 	<div id="infoSVwContent" class="infoContent" style="height: 100%; width: 1200px; auto; border:none; overflow:auto">
+		<table class="tabSVw", style="width: 1200px; border-left: 1px solid black; border-top: 1px solid black">
+			<thead>
+	            <tr class="tabSVw">
+    	        	<th class="tabSVw" style="width: 26px;" rowspan="2">is vis- ible</th>
+        	    	<th id="tabSVwHdInd" class="tabSVw" style="width: 58px; padding: 0px;" rowspan="2">&darr;index</th>
+					<th id="tabSVwHdF" class="tabSVw" style="width: 58px; padding: 0px" rowspan="2">&nbsp;F<br>(<span style="font-size:10px">focal&nbsp;plane</span>)</th>
+					<th id="tabSVwHdZ" class="tabSVw" style="width: 58px; padding: 0px" rowspan="2">&nbsp;Z<br>(<span style="font-size:10px">zoom&nbsp;level</span>)</th>
+					<th class="tabSVw" style="width: 58px" rowspan="2">zoom multiplier</th>
+    	            <th class="tabSVw" colspan="6" style="width: 516px">in viewing frame</th>
+        	        <th class="tabSVw" colspan="4" style="width: 344px">in database</th>
+            	    </tr>
+	            <tr class="tabSVw">
+					<th class="tabSVw" style="width: 86px">start tile,<br>x-value</th>
+					<th class="tabSVw" style="width: 86px">number of tiles, x-axis</th>
+					<th class="tabSVw" style="width: 86px">start tile,<br>y-value</th>
+					<th class="tabSVw" style="width: 86px">number of tiles, y-axis</th>
+					<th class="tabSVw" style="width: 86px">left offset<br>(pixels)</th>
+					<th class="tabSVw" style="width: 86px">top offset<br>(pixels)</th>
+					<th class="tabSVw" style="width: 86px">start tile,<br>x-value</th>
+					<th class="tabSVw" style="width: 86px">number of tiles, x-axis</th>
+					<th class="tabSVw" style="width: 86px">start tile,<br>y-value</th>
+					<th class="tabSVw" style="width: 86px">number of tiles, y-axis</th>
+    	            </tr>
+				</thead>
+			<tbody id="infoSVwLstSubBody">
+            	</tbody>
+			</table>
+        </div>
+
+	</div>  <!-- end of slideView infoBox div -->
+
+
+
+	<!--  *************************************************  -->
+	<!--  *****   create Change FocusSettings "info" box   *****  -->
+	<!--  *************************************************  -->
+
+
+<div id="chgFSetting" class="infoBox" style="top: 90px; left: 430px;  height: 187px; width:272px; background-color: rgb(192,128,128); display: none">
+	<div style="background-color: rgb(255,240,240); width: 100%; height: 45px">
+		<!--  Top of the infoBox  => includes a title, a 'close' button, and the infoMvBtn button -->
+	    <button class="infoButton" style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+    	   		onClick="chgSetCloseConfirm('chgFSetting')">
+			<b>X</b>
+			</button>
+		<button id="infoBoxChgFSetMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="infoBxMusOut(this)"
+    			onMouseDown="infoBxMusDwn(this,event)" onMouseUp="infoBxMusUp(this)">
+	        Press here to move
+    	    </button>
+		<div align="center" style="margin: 1px 54px; text-align:center; font-size: 22px; line-height: 0.95">Change Focus<br>Settings</div>
+		</div>
+        		<!--  This div contains the 'menu' for this "infoBox" ("Change settings", id ="chgSetting")  -->
+    <div style="width: 100%; box-sizing: border-box; position: absolute; top: 50px;
+			background-color: rgb(255,245,245); border: 5px solid rgb(224,224,224)">
+    	<button class="infoButton" style="width: 119px; left: 8px" onClick="chgSetSubmit('chgFSetting')">
+        	Submit
+            </button>
+    	<button class="infoButton" style="width: 119px; left: 15px" onClick="document.getElementById('chgFSetting').style.display = 'none'">
+        	Cancel
+            </button>
+        </div>
+		<!--  This div contains the 'contents' for this "infoBox" ("Change settings", id ="chgSetting")  -->
+	<div class="infoContent" style="height: 100%; width: 272px; top: 93px">
+					<!-- "Set F default" button -- NOTE "f" in fchg ...  -->
+		<div id="fchgDefF" class="chgItem">
+			Default focal plane:
+			<input type="text" id="fchgDefFVal" class="chgInputBx" onChange="chgInput(this,4)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,4)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,4)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Set FZ limit" button  -->
+		<div id="fchgZFLim" class="chgItem">
+			Zoom-level limit for focus:
+			<input type="text" id="fchgZFLimVal" class="chgInputBx" onChange="chgInput(this,5)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,5)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,5)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+		<div id="fchgFCycTim" class="chgItem">
+			Focal-plane cycling timer:
+			<input type="text" id="fchgFCycTimVal" class="chgInputBx" onChange="chgInput(this,6)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="100" style="top: 0px"
+                		onClick="chgClkBtn(this,6)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-100" style="bottom: 0px"
+                		onClick="chgClkBtn(this,6)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,6)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,6)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>
+		</div>
+	</div>
+
+
+	<!--  *************************************************  -->
+	<!--  *****   create Change Settings "info" box   *****  -->
+	<!--  *************************************************  -->
+
+
+<div id="chgSetting" class="infoBox" style="top: 5px; left: 360px; height: 594px; width:550px; background-color: rgb(192,128,128); display: none">
+	<div style="background-color: rgb(255,240,240); width: 100%; height: 45px">
+		<!--  Top of the infoBox  => includes a title, a 'close' button, and the infoMvBtn button -->
+	    <button class="infoButton" style="float:right; width: 25px; height: 25px; padding-left: 1px; padding-right: 1px; margin-right: 0px; border-width: 3px" 
+    	   		onClick="chgSetCloseConfirm('chgSetting')">
+			<b>X</b>
+			</button>
+		<button id="infoBoxChgSetMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="infoBxMusOut(this)"
+    			onMouseDown="infoBxMusDwn(this,event)" onMouseUp="infoBxMusUp(this)">
+	        Press here to move
+    	    </button>
+		<div align="center" style="text-align:center; font-size: 32px"><b>Change Settings</b></div>
+		</div>
+		<!--  This div contains the 'menu' for this "infoBox" ("Change settings", id ="chgSetting")  -->
+    <div style="width: 100%; box-sizing: border-box; position: absolute;
+			background-color: rgb(232,192,192); border: 5px solid rgb(224,224,224)">
+    	<button class="infoButton" style="left: 100px" onClick="chgSetSubmit('chgSetting')">
+        	Submit
+            </button>
+    	<button class="infoButton" style="float:right; right: 100px" onClick="document.getElementById('chgSetting').style.display = 'none'">
+        	Cancel
+            </button>
+        </div>
+
+	<div class="chgExtraBx">
+    	<div style="text-align:center; font-size:16px"><b>Warning</b></div>
+    	The parameters listed below can be adjusted to accommodate differences in 
+        computer capabilities, server response times, and personal 
+        preferences.  However, changing some of these values can have a significant 
+        negative impact on the virtual microscope's performance, and 
+        you should use discretion if you change these parameters.
+    	</div>
+
+		<!--  This div contains the left column of 'contents' for this "infoBox" ("Change settings", id ="chgSetting")  -->
+	<div id="chgSetContent" class="infoContent" style="top: 212px; height: 100%; width:272px; left: 0px; overflow: none">
+						<!-- "Set Tile buffer" button  -->
+		<div id="chgTileBuf" class="chgItem">
+			Tile buffer:
+			<input type="text" id="chgTileBufVal" class="chgInputBx" onChange="chgInput(this,0)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,0)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,0)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Set Tile offset" button  -->
+		<div id="chgTileOff" class="chgItem">
+			Tile buffer offset:
+			<input type="text" id="chgTileOffVal" class="chgInputBx" onChange="chgInput(this,1)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,1)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,1)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="0.1" style="top: 0px"
+                		onClick="chgClkBtn(this,1)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-0.1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,1)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+		<div class="chgDivider"></div>
+						<!-- "Set F buffer" button  -->
+		<div id="chgFBuf" class="chgItem">
+			Focal plane buffer:
+			<input type="text" id="chgFBufVal" class="chgInputBx" onChange="chgInput(this,2)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,2)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,2)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Set MaxF loaded" button  -->
+		<div id="chgMaxF" class="chgItem">
+			Max focal planes loaded:
+			<input type="text" id="chgMaxFVal" class="chgInputBx" onChange="chgInput(this,3)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,3)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,3)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,3)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,3)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "setDefF" button  -->
+		<div id="chgDefF" class="chgItem">
+			Default focal plane:
+			<input type="text" id="chgDefFVal" class="chgInputBx" onChange="chgInput(this,4)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,4)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,4)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Set FZ limit" button  -->
+		<div id="chgZFLim" class="chgItem">
+			Zoom-level limit for focus:
+			<input type="text" id="chgZFLimVal" class="chgInputBx" onChange="chgInput(this,5)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,5)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,5)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Focus cycle interval" button  -->
+		<div id="chgFCycTim" class="chgItem">
+			Focal-plane cycling timer:
+			<input type="text" id="chgFCycTimVal" class="chgInputBx" onChange="chgInput(this,6)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="100" style="top: 0px"
+                		onClick="chgClkBtn(this,6)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-100" style="bottom: 0px"
+                		onClick="chgClkBtn(this,6)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,6)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,6)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+		<div class="chgDivider"></div>
+						<!-- "Set Z buffer" button  -->
+		<div id="chgZBuf" class="chgItem">
+			Zoom-level buffer:
+			<input type="text" id="chgZBufVal" class="chgInputBx" onChange="chgInput(this,7)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,7)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,7)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Set FZ buffer" button  -->
+		<div id="chgFZBuf" class="chgItem">
+			F &times; Z buffer:
+			<input type="text" id="chgFZBufVal" class="chgInputBx" onChange="chgInput(this,8)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,8)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,8)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+		<div class="chgDivider"></div>
+						<!-- "Max cache size" button  -->
+		<div id="chgMaxCache" class="chgItem">
+			Maximum cache size:
+			<input type="text" id="chgMaxCacheVal" class="chgInputBx" onChange="chgInput(this,9)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="100" style="top: 0px"
+                		onClick="chgClkBtn(this,9)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-100" style="bottom: 0px"
+                		onClick="chgClkBtn(this,9)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,9)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,9)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Max destArr" button  -->
+		<div id="chgMaxDestArr" class="chgItem">
+			Max destruction-array size:
+			<input type="text" id="chgMaxDestArrVal" class="chgInputBx" onChange="chgInput(this,10)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,10)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,10)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,10)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,10)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "destArr timer" button  -->
+		<div id="chgDestArrInterval" class="chgItem">
+			Destruction-array timer:
+			<input type="text" id="chgDestArrIntervalVal" class="chgInputBx" onChange="chgInput(this,11)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,11)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,11)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,11)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,11)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+
+        </div>  <!-- end LEFT column of change-settings items -->
+				<!--  start of RIGHT column of change-settings items -->
+	<div id="chgSetContent" class="infoContent" style="top: 212px; height: 100%; width:272px; right: 0px; overflow: none">
+						<!-- "Move-button step size" button  -->
+		<div id="chgMvBtnStp" class="chgItem">
+			Move-button step size:
+			<input type="text" id="chgMvBtnStpVal" class="chgInputBx" onChange="chgInput(this,12)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,12)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,12)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Move-button step multiplier" button  -->
+		<div id="chgMvBtnMult" class="chgItem">
+			Move-button step multiplier:
+			<input type="text" id="chgMvBtnMultVal" class="chgInputBx" onChange="chgInput(this,13)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,13)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,13)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Move-button interval" button  -->
+		<div id="chgMvStpInt" class="chgItem">
+			Move-button timer:
+			<input type="text" id="chgMvStpIntVal" class="chgInputBx" onChange="chgInput(this,14)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="100" style="top: 0px"
+                		onClick="chgClkBtn(this,14)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-100" style="bottom: 0px"
+                		onClick="chgClkBtn(this,14)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,14)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,14)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "Mouse deceleration max velocity" button  -->
+		<div id="chgMusMaxVel" class="chgItem">
+			Mouse deceleration velocity:
+			<input type="text" id="chgMusMaxVelVal" class="chgInputBx" onChange="chgInput(this,15)"/>
+			<div class="chgStepper" style="right:16px">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,15)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,15)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "mouse deceleration factor" button  -->
+		<div id="chgMusSlwDwnDecel" class="chgItem">
+			Mouse deceleration factor:
+			<input type="text" id="chgMusSlwDwnDecelVal" class="chgInputBx" onChange="chgInput(this,16)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="0.1" style="top: 0px"
+                		onClick="chgClkBtn(this,16)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-0.1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,16)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="0.01" style="top: 0px"
+                		onClick="chgClkBtn(this,16)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-0.01" style="bottom: 0px"
+                		onClick="chgClkBtn(this,16)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "mouse deceleration timer" button  -->
+		<div id="chgMusSlwDwnInt" class="chgItem">
+			Mouse deceleration timer:
+			<input type="text" id="chgMusSlwDwnIntVal" class="chgInputBx" onChange="chgInput(this,17)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,17)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,17)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,17)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,17)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+		<div class="chgDivider"></div>
+		<div id="chgMusWhlTime" class="chgItem">
+			Mouse-wheel speed control:
+			<input type="text" id="chgMusWhlTimeVal" class="chgInputBx" onChange="chgInput(this,22)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="100" style="top: 0px"
+                		onClick="chgClkBtn(this,22)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-100" style="bottom: 0px"
+                		onClick="chgClkBtn(this,22)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,22)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,22)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+		<div class="chgDivider"></div>
+						<!-- "cache infoBox height" button  -->
+		<div id="chgInfoBoxHt" class="chgItem">
+			Cache-list box height:
+			<input type="text" id="chgInfoBoxHtVal" class="chgInputBx" onChange="chgInput(this,18)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="100" style="top: 0px"
+                		onClick="chgClkBtn(this,18)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-100" style="bottom: 0px"
+                		onClick="chgClkBtn(this,18)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,18)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,18)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "warn box display time" button  -->
+		<div id="chgWarnDispTime" class="chgItem">
+			Warning box display time:
+			<input type="text" id="chgWarnDispTimeVal" class="chgInputBx" onChange="chgInput(this,19)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="1000" style="top: 0px"
+                		onClick="chgClkBtn(this,19)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1000" style="bottom: 0px"
+                		onClick="chgClkBtn(this,19)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="100" style="top: 0px"
+                		onClick="chgClkBtn(this,19)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-100" style="bottom: 0px"
+                		onClick="chgClkBtn(this,19)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "warn box fade amoutn" button  -->
+		<div id="chgWarnFadeAmt" class="chgItem">
+			Warning box fade amount
+			<input type="text" id="chgWarnFadeAmtVal" class="chgInputBx" onChange="chgInput(this,20)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="0.1" style="top: 0px"
+                		onClick="chgClkBtn(this,20)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-0.1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,20)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="0.01" style="top: 0px"
+                		onClick="chgClkBtn(this,20)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-0.01" style="bottom: 0px"
+                		onClick="chgClkBtn(this,20)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+						<!-- "warnBox fade timer" button  -->
+		<div id="chgWarnFadeInt" class="chgItem">
+			Warning box fade timer:
+			<input type="text" id="chgWarnFadeIntVal" class="chgInputBx" onChange="chgInput(this,21)"/>
+			<div class="chgStepper" style="right: 16px; border-right: 0px">
+				<button class="chgStepperBtn" value="10" style="top: 0px"
+                		onClick="chgClkBtn(this,21)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-10" style="bottom: 0px"
+                		onClick="chgClkBtn(this,21)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			<div class="chgStepper">
+				<button class="chgStepperBtn" value="1" style="top: 0px"
+                		onClick="chgClkBtn(this,21)">
+					&#9650;
+					</button>
+				<button class="chgStepperBtn" value="-1" style="bottom: 0px"
+                		onClick="chgClkBtn(this,21)">
+                	&#9660;
+                    </button>
+				</div>  <!-- end chgStepper -->
+			</div>  <!-- end chgItem -->
+	</div>  <!-- end of chgSetting infoBox div -->
+
+<script src = "jrscpGlobal.js"> </script>
+<script src = "jrscpProg.js"> </script>
+<script src = "jrscpSldView.js"> </script>
+<script src = "jrscpMove.js"> </script>
+<script src = "jrscpFZ.js"> </script>
+<script src = "jrscpMenu.js"> </script>
+<script src = "jrscpChgSet.js"> </script>
+<script src = "jrscpTouchMain.js"> </script>
+<script src = "jrscpTouchMenu.js"> </script>
+
+</body>
+</html>
