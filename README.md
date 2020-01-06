@@ -1,2 +1,16 @@
 # virtualmicroscope
 Virtual Microscope
+
+The PNWU Virtual Microscope is a web-based program for displaying multifocal-plane, whole-slide-scanned microscope slides ("virtual slides") using an image-tile architecture similar to that used by the Google Maps API.  A version of this program can be seen at http://viewer.pnwu.edu.  Currently (January, 2020) the principal components of the program consist of one HTML file (Microscoope.htm), one CSS file (jrscpStyleMain.css), nine javascript files (jrscpGlobal.js, jrscpProg.js, jrscpSldView.js, jrscpMove.js, jrscpFZ.js, jrscpMenu.js, jrscpTouchMain.js, jrscpTouchMenu.js, jrscpChgSet.js), and four PHP files (jrSQL_GetSldList.php, jrSQL_GetSldBasic.php, jrSQL_GetSldInfo.php, jrSQL_GetZYX.php); there also are ancilliary files (jpg, png, wav).  Besides a database of microscope-image tiles, the program also relies on a SQL database containing metadata relative to each microscope slide.  It is anticipated that additional javascript and PHP files will need to be created when additions to the Virtual Microscope (such as tools for measuring/annotating the slides) are created.
+Questions or comments regarding the PNWU Virtual Microscope can be emailed to:  Microscope@PNWU.edu.
+
+There are (at least) two known bugs that I would greatly appreciate help in tracking-down.
+
+  (1) On a touchscreen device, when changing magnification or focus by pinching/spreading your fingers on the computer screen, the program frequently (usually) hangs after changing zoom-level or focal plane one or two times.  Lifting fingers off the screen unblocks the hang and allows the program to proceed with displaying the slide (including using pinch/spread to change zoom/focus).  There probably is an interaction between exiting from a "wait" state (while an image plane loads) and the program hanging, since the number of zoom/focus steps before hanging increases if the settings are changed so that relevant slideView planes are already in memory.  I can trace the call through the relevant functions from intiation to termination (including passage through a "wait" state), so it looks like the program hangs after the pinch/spread call has finished (which doesn't make sense to me).
+  
+  (2) For touchscreen devices, touching the part of the screen containing the image of the slide (sldBndBox) results in a touchEvent whose target is the visible slideView plane (which is a child of sldBndBox), rather than sldBndBox, even though useCapture == true and the eventListener is attached to the parent (sldBndBox.addEventListener()).
+  
+There are many aspects of the project that still need to be developed, and we would be delighted to have collaborators.  Among the sub-projects that we hope to address in the next few months (Winter/Spring 2020) are:
+  (1) cleaning-up & debugging touchEvents on the part of the window (sldBndBox) that displays the slideView planes.
+  (2) rewriting the Change Setting code ... the current code handling the user changing default settings is very 'clunky' and needs to be cleaned-up.
+  (3) adding a scale-bar, tools for measuring & annotating elements within the specimen (annotations will require that we develop a login system so that the user can log-in to get and/or save annotations), and for exporting the URL that includes command-line arguments.
