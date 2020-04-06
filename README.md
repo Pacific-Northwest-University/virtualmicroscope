@@ -8,11 +8,11 @@ Questions or comments regarding the PNWU Virtual Microscope can be emailed to:  
 
 Among the known bugs, there is a particularly aggravating bug that I would greatly appreciate help in eliminating.
 
-For touchscreen devices, touching the part of the screen containing the image of the slide (<div id="sldBndBox">) results in a touchEvent whose target is the visible slideView plane (which is a child of <div id="sldBndBox">), rather than sldBndBox, even though useCapture == true and the eventListener is attached to the parent (sldBndBox.addEventListener()).
+For touchscreen devices, touching the part of the screen containing the image of the slide (a "div" with id="sldBndBox") results in a touchEvent whose target is the visible slideView plane (which is a child of "sldBndBox"), rather than sldBndBox, even though useCapture == true and the eventListener is attached to the parent (sldBndBox.addEventListener()).
 
 I think that fact that the touchEvent is attached to the child of sldBndBox is the cause of another bug: when changing magnification or focus by pinching/spreading your fingers on the computer screen, the program frequently (usually) hangs after changing zoom-level or focal plane two or more times.  Lifting fingers off the screen unblocks the hang and allows the program to proceed with displaying the slide (including using pinch/spread to change zoom/focus). I'm guessing that the error is because the slideView plane to which the touchEvent belongs was destroyed when the number of view-plane was restricted.  If I only could figure out how to get the touchEvent to "belong" to sldBndBox (which is never destroyed) ... 
   
-There are many aspects of the project that still need to be developed, and we would be delighted to have collaborators.  Among the sub-projects that we hope to address in the next few months (Winter/Spring 2020) are:
+There are many aspects of the project that still need to be developed, and we would be delighted to have collaborators.  Among the sub-projects that we hope to address in the next few months (Spring & Summer 2020) are:
   (1) cleaning-up & debugging touchEvents on the part of the window (sldBndBox) that displays the slideView planes.
   (2) rewriting the Change Setting code ... the current code handling the user changing default settings is very 'clunky' and needs to be cleaned-up.
   (3) adding a scale-bar, tools for measuring & annotating elements within the specimen (annotations will require that we develop a login system so that the user can log-in to get and/or save annotations), and for exporting the URL that includes command-line arguments.
