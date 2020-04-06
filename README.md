@@ -17,4 +17,4 @@ There are many aspects of the project that still need to be developed, and we wo
   (2) rewriting the Change Setting code ... the current code handling the user changing default settings is very 'clunky' and needs to be cleaned-up.
   (3) adding a scale-bar, tools for measuring & annotating elements within the specimen (annotations will require that we develop a login system so that the user can log-in to get and/or save annotations), and for exporting the URL that includes command-line arguments.
 
-If you are interested in helping on this project, please email Jim Rhodes using the contact information listed in "About" => "About PNWU Microscope" in the microscope viewer:  http://viewer.pnwu.edu. 
+If you are interested in helping with this project, please email Jim Rhodes using the contact information listed in "About" => "About PNWU Microscope" in the microscope viewer:  http://viewer.pnwu.edu. 
