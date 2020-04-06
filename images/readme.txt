@@ -1,0 +1,1 @@
+This directory contains images referenced by the Virtual Microscope.  These files should be in a directory named "images" that is at the same level as the directory "UserFiles" (i.e., these files will be accessed as "../images/'filename.jpeg'
