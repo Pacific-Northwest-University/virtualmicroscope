@@ -8,7 +8,7 @@ Questions or comments regarding the PNWU Virtual Microscope can be emailed to:  
 
 Among the known bugs, there is a particularly aggravating bug that I would greatly appreciate help in eliminating.
 
-For touchscreen devices, touching the part of the screen containing the image of the slide (a "div" with id="sldBndBox") results in a touchEvent whose target is the visible slideView plane (which is a child of "sldBndBox"), rather than sldBndBox, even though useCapture == true and the eventListener is attached to the parent (sldBndBox.addEventListener()).
+For touchscreen devices, touching the part of the screen containing the image of the slide (a "div" with id="sldBndBox") results in a touchEvent whose target is the visible slideView plane (which is a child of "sldBndBox"), rather than sldBndBox, even though useCapture == true and the eventListener is attached to the parent (sldBndBox.addEventListener(); the eventListener is NOT attached to the child!).
 
 I think that fact that the touchEvent is attached to the child of sldBndBox is the cause of another bug: when changing magnification or focus by pinching/spreading your fingers on the computer screen, the program frequently (usually) hangs after changing zoom-level or focal plane two or more times.  Lifting fingers off the screen unblocks the hang and allows the program to proceed with displaying the slide (including using pinch/spread to change zoom/focus). I'm guessing that the error is because the slideView plane to which the touchEvent belongs was destroyed when the number of view-plane was restricted.  If I only could figure out how to get the touchEvent to "belong" to sldBndBox (which is never destroyed) ... 
   
