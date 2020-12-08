@@ -1,0 +1,1009 @@
+/* jrsbStyleMain.css
+	Copyright 2020  Pacific Northwest University of Health Sciences
+    
+    jrsbStyleMain.css internet web-based program that displays digitally-scanned microscopic specimens.
+	The "PNWU Virtual Microscope" consists of two modules:
+		-- "SlideBox", which searches and displays a list of available slides
+		-- "Viewer" (the "Microscope") which displays the selected slide
+	Both components of the system:  the Viewer ("PNWU Virtual Microscope") and the "PNWU Virtual Slide Box"
+		are free software:  you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation, either version 3
+		of the License, or any later version.  See <https://www.gnu.org/licenses/gpl-3.0.html>
+ 	"PNWU Virtual Microscope" ("PNWU Virtual Microscope" Viewer and "PNWU Virtual Slide Box") is distributed in the hope 
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the 
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU Public License for more details.
+	Currently, the "slide box" part of "PNWU Microscope" consists of 9 principal files and other supplementary files:
+    	- one HTML file.
+        - one cascading style sheet (this file).
+        - six javascript files.
+        - one PHP file.
+	Questions concerning "PNWU Microscope" may be directed to:
+    	James Rhodes, PhD
+        Pacific Northwest Univesity of Health Sciences
+        200 University Parkway
+        Yakima WA 98901 USA
+*/
+
+@charset "utf-8";
+/* jrsbStyleMain.css was created on 5/25/20, by splitting the <style> object out of SlideBox.htm */
+
+@-ms-viewport { 
+	width: device-width;
+	height: device-height;
+	}
+
+-ms-@viewport {
+    width: device-width;
+    initial-scale: 1;
+    zoom: 1;
+    min-zoom: 1;
+    max-zoom: 1;
+    user-zoom: fixed;
+}
+@viewport {
+    width: device-width;
+    initial-scale: 1;
+    zoom: 1;
+    min-zoom: 1;
+    max-zoom: 1;
+    user-zoom: fixed;
+}
+
+
+
+		/*  ************************************************ */
+		/*  ******     style for the background page     ****** */
+		/*  ************************************************ */
+
+.sbBkgrdClass{
+	position:absolute;
+	top: 0px;
+	left: 0px;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	background-color: rgb(192,192,192);
+	}
+
+
+
+		/*  ************************************************ */
+		/*  ******     styles for the search page     ****** */
+		/*  ******                                    ****** */
+		/*  ************************************************ */
+
+.srchPageClass{
+	display: block;
+	visibility:hidden;
+	position:absolute;
+	background-color: white;
+	top: 10px;
+	left: 10px;
+	width: 860px;
+	border: solid black;
+	border-width: 1px 2px 2px 2px;
+	}
+
+.srchPageTitleClass {
+	position:relative;
+	box-sizing:border-box;
+	width: 100%;
+	border-bottom: 1px solid black;
+	background-color: rgb(232,232,255);
+	padding: 5px;
+	text-align: center;
+	font-family:Calibri, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 32px; 
+	color: rgb(1,85, 124);
+	}
+
+.srchRightClass {
+	position: relative;
+	width: 400px;
+	float:right;
+	}
+
+
+.srchLeftClass {
+	position: relative;
+	box-sizing:border-box;
+	width: 460px;
+	float:left;
+	border-right: 1px solid black;
+	}
+
+.srchInstrClass {
+	position:absolute;
+	box-sizing:border-box; 
+	top: 0px;
+	width: 100%;
+	border-bottom: 1px solid black;
+	background-color: rgb(232,232,255);
+	padding: 15px;
+	}
+
+.srchInstrTxtClass {
+	position:relative;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	text-align:left;
+	margin-top:15px;
+	}
+
+.srchBtnClass {
+	position: relative;
+	height:50px;
+	width:154px;
+	border: 8px outset rgb(128,128,192);
+	padding: 0px;
+	margin-top: 15px;
+		/* margin-left needs to be reset when final dimensions are established */
+	margin-left: 115px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align:center;
+	font-size:16px;
+	cursor:pointer;
+	}
+
+.srchBtnClass:hover {
+	background-color: rgb(208,208,232);
+	border-color: rgb(64,64,128);
+	}
+.srchBtnClass:active {
+	background-color: rgb(208,192,192);
+	border: inset 8px rgb(192,128,128);
+	color: rgb(128,64,64);
+	}
+
+.srchLogoClass{
+	position:absolute;
+	box-sizing:border-box;
+	right: 0px;
+	width: 100%;
+	border-bottom: 1px solid black;
+	background-color: rgb(200,200,232);
+	}
+
+.srchLogoImgClass{
+	position:relative;
+	top: 0px;
+	left: 13px;
+	height: 50px;
+	width: 50px;
+	padding: 5px;
+	}
+
+.srchLogoTxtClass{
+	position:absolute;
+	right: 18px;
+	width:240px;
+	text-align:left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14px;
+/*	line-height: 0.95; */
+		/* not selectable or drag-able */
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.srchLeftTitleClass {
+	position:relative;
+	box-sizing:border-box; 
+	top: 0px;
+	width: 459px;
+	border-bottom: 1px solid black;
+	background-color: rgb(240,224,224);
+	text-align: center;
+	font-family:Calibri, Arial, Helvetica, sans-serif;
+	font-weight:bold;
+	font-size: 20px; 
+	color: black;
+	}
+
+.crtMainBoxClass {
+	position:relative;
+	box-sizing:border-box; 
+	width: 459px;
+	height: 72px;
+	border-bottom: 1px solid black;
+	background-color: rgb(240,224,224);
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	font-weight:bold;
+	text-align:left;
+	padding-left: 8px;
+	padding-top: 2px;
+	padding-right: 2px;
+		/* not selectable or drag-able */
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.crtMainBoxClass:hover {
+	background-color: rgb(232,200,200);
+	}
+
+
+.crtNameClass {
+	display:inline-block;
+	float: left;
+	margin-top:5px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	font-weight:bold;
+	text-align:left;
+		/* not selectable or drag-able */
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.crtDrpDwnContainerClass{
+	display:block;
+	width: 100%;
+	min-height: 30px;
+	}
+
+.crtDrpDwnContainerClass:hover .crtSideContainerClass{
+	display: block;
+	}
+
+.crtShwValClass{
+	display:inline-block;
+	float: right;
+	margin-top:5px;
+	height: 22px;
+	min-width: 220px;
+	background-color: white;
+	border: 1px solid black;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 14px;
+	font-weight:normal;
+	text-align:right;
+	padding-right:10px;
+	padding-top: 1px;
+	cursor:pointer;
+		/* not selectable or drag-able */
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.crtArrowClass{
+	display:inline-block;
+	float:right;
+	margin-top:5px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	font-weight:bold;
+	letter-spacing: -8px;
+	margin-right:20px;
+	cursor: pointer;
+	}
+
+.crtSideContainerClass{
+	display: none;
+	position:absolute;
+	left: 440px;
+/*	width: 260px; */
+	z-index: 1;
+	}
+
+	/* crt1ColSideContainerClass  and crt2ColSideContainerClass
+		are used with .crtSideContainerClass to set the width of 
+		criterion side-menus for either 1 or  2 columns */
+.crt1ColSideContainerClass {
+	width: 260px;
+	}
+.crt2ColSideContainerClass {
+	width: 512px;
+	}
+
+.crtSideContainerClass: hover{
+	display: block;
+	}
+
+.crtDropDownBoxClass {
+	position: relative;
+	box-sizing:border-box;
+	left:20px;
+/*	width: 250px; */
+	background-color: rgb(255,232,232);
+	border: 2px solid black;
+	box-shadow: 8px 6px 3px 1px rgba(64,64,64,0.5),
+			8px 4px 2px 7px rgba(255,255,255,0.5),
+			10px 2px 8px 15px rgba(255,255,255,0.3)
+			;
+	}
+
+	/* crt1ColDropDownBoxClass  and crt2ColDropDownBoxClass are used with .crtDropDownBoxClass
+		to set the width of criterion side-menus for either 1 or  2 columns */
+.crt1ColDropDownBoxClass {
+/*	position: relative;
+	box-sizing:border-box;
+	left:20px;
+*/	width: 250px;
+/*	background-color: rgb(255,232,232);
+	border: 2px solid black;
+	box-shadow: 8px 6px 3px 1px rgba(64,64,64,0.5),
+			8px 4px 2px 7px rgba(255,255,255,0.5),
+			10px 2px 8px 15px rgba(255,255,255,0.3)
+			;
+*/	}
+
+.crt2ColDropDownBoxClass {
+/*	position: relative;
+	box-sizing:border-box;
+	left:20px; */
+	width: 502px;
+/*	background-color: rgb(255,232,232);
+	border: 2px solid black;
+	box-shadow: 8px 6px 3px 1px rgba(64,64,64,0.5),
+			8px 4px 2px 7px rgba(255,255,255,0.5),
+			10px 2px 8px 15px rgba(255,255,255,0.3)
+			;
+*/	}
+
+.crtSideItmClass{
+	position:relative;
+	box-sizing:border-box;
+	width: 100%;
+	height: 28px;
+	border-bottom: 1px solid black;
+	background-color: rgb(240,224,224);
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	font-weight:normal;
+	text-align:left;
+	padding-left: 5px;
+	padding-top: 5px;
+	cursor:pointer;
+		/* not selectable or drag-able */
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.crtSideItmClass:hover{
+	background-color: rgb(232,200,200);
+	}
+
+.crtSideItmClass:active{
+	background-color: rgb(200,200,232);
+	}
+
+.crtRowTwoClass {
+	display: block;
+	visibility: hidden;
+	float:right;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 14px;
+	font-weight:normal;
+	margin-right: 12px;
+	margin-top: 7px;
+	padding-right: 12px;
+	}
+
+.crtStEndValClass{
+	display:inline-block;
+	position: relative;
+	height: 20px;
+	width: 75px; 
+	min-width: 40px;
+	background-color: white;
+	border: 1px solid black;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 14px;
+	font-weight:normal;
+	text-align:right;
+	padding-right:5px;
+	}
+
+
+		/*  ************************************************ */
+		/*  ******     styles for the list-window     ****** */
+		/*  ******          (lstWnd, lstPage)         ****** */
+		/*  ************************************************ */
+
+.lstPageClass{
+	position:absolute;
+	display: none;
+	top: 0px;
+	left: 0px;
+	box-sizing:border-box;
+	width: 100%;
+	height: 100%;
+	border: 2px solid black;
+/*	background-color: rgb(190,190,255); */
+	overflow-y:auto;
+	}
+
+
+.lstPageHdrClass {
+	position:relative;
+	box-sizing:border-box;
+	width: 100%;
+	border-bottom: 2px solid black;
+	background-color: rgb(232,232,255);
+	padding: 5px;
+	text-align: center;
+	font-family:Calibri, Arial, Helvetica, sans-serif;
+	font-size: 22px; 
+	color: black;
+		/* not selectable or drag-able */
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+
+
+.lstWndClass {
+	position:relative;
+	display: block;
+	background-color: rgb(190,190,255);
+	overflow-y:auto;
+	background-color: rgb(208,208,255);
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	}
+
+
+		/*  ************************************************* */
+		/*  ******    styles for the slide-item box    ****** */
+		/*  ******          within the lstPage         ****** */
+		/*  ************************************************* */
+
+
+.sldItmEntry {
+	position:absolute;
+	display: block;
+	height: 128px;
+	width: 520px;
+	border: 8px outset rgb(128,128,192);
+	background-color: white;
+	cursor:pointer;
+	}
+
+.sldItmEntry:hover {
+	background-color: rgb(208,208,208);
+	border-color: rgb(64,64,128);
+	}
+
+.sldItmEntry:active {
+	background-color: rgb(208,192,192);
+	border: inset 8px rgb(192,128,128);
+	color: rgb(128,64,64);
+	}
+
+.sldItmTxt {
+	position:relative;
+	display: block;
+	float:left;
+	height: 120px;
+	width: 256px;
+	margin-left:5px;
+	margin-top: 4px;
+	overflow:hidden;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 16px;
+	line-height: 1.25;
+	text-align:left;
+	vertical-align:middle;
+	color: black;
+		/* text not drag-able */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.sldItmImg {
+	position:relative;
+	display: block;
+	float:right;
+	height: 128px;
+	width: 128px;
+	border-left:1px solid black;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 12px;
+	text-align:center;
+	vertical-align:middle;
+		/* not selectable or drag-able */
+    -o-user-select: none;
+    -moz-user-select: none;
+	-ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+
+
+
+		/*  ************************************************ */
+		/*  *********       styles for menus       ********* */
+		/*  ************************************************ */
+
+.menuMainClass {
+	position: relative;
+	box-sizing: border-box;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 45px;
+	border-bottom: 2px solid black;
+	border-top: 0px;
+	margin: 0px;
+	padding: 0px;
+	background-color: rgb(128,128,192);
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 18px;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+
+.menuBtnClass {
+	position: relative;
+	float: left;
+	box-sizing: border-box;
+	border: 4px outset rgb(96,96,160);
+	background-color: rgb(128,128,192);
+	cursor:pointer;
+	min-width: 95px;
+	height: 100%;
+	color: white;
+	padding: 0px;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 18px;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.menuBtnClass:hover {
+	background-color: rgb(80,80,114);
+	border-color: rgb(56,56,120);
+	}
+
+.menuBtnClass:active {
+	background-color: rgb(192,128,128);
+	border: inset 4px rgb(160,96,96);
+	color: rgb(96,32,32);
+	}
+
+.menuDrpDwnContnrClass {
+	float: left;
+	display:inline-block;
+	min-height: 48px;
+	}
+
+.menuDrpDwnItemClass {
+	display: inline-block;
+	box-sizing: border-box;
+	border-bottom: 1px black solid;
+	min-width: 170px;  /* 6/02/20; this had been 90px */
+	top: 0px;
+	height: 44px;  /* 100% miscalculates border length */
+	background-color: rgb(128,128,192);
+	color: white;
+	text-align: center;
+	padding: 9px 0px;
+	cursor: default;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 18px;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+
+.menuDrpDwnContnrClass:hover .menuDrpDwnItemClass{
+	background-color: rgb(80,80,114);
+	}
+
+
+.menuItmRightClass {
+	border-left: 2px solid black;
+	}
+
+.menuItmLeftClass {
+	border-right: 2px solid black;
+	}
+
+.menuItmBothClass {
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	}
+
+
+.menuDrpDwnContentClass {
+	display: none;
+	position: absolute;
+	overflow:hidden;
+	top: 44px;  /* must match height of menuMainClass */
+	width: 265px;
+	background-color: rgb(224,224,224);
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	padding: 0px;
+	box-shadow: 8px 6px 3px 1px rgba(64,64,64,0.5);
+	z-index: 1;
+	}
+
+.menuDrpDwnContnrClass:hover .menuDrpDwnContentClass {
+	display: block;
+	}
+
+
+.menuDrpDwnSubItem {
+	position: relative;
+	width: 255px;
+	height: 20px;
+	padding: 5px;
+	border-bottom: 1px solid black;
+	font-size: 16px;
+		/* text not-selectable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.menuDrpDwnShort {
+	width: 175px;
+	}
+
+.menuClickable {
+	cursor: pointer;
+	}
+
+.menuClickable:hover {
+	background-color: rgb(208,208,224);
+	}
+
+.menuClickable:active {
+	color: rgb(192,0,0);
+	background-color: rgb(226,160,160);
+	}
+
+.menuDivider {
+	height: 2px;
+	padding: 0px;
+	width: 265px;
+	border-bottom: 1px solid black;
+	background-color: rgb(128,128,192);
+	}
+
+.menuInfoItemClass {  /* can't use DrpDwnItemClass because of :hover */
+	display: inline-block;
+	box-sizing: border-box;
+	min-width: 170px;  /* 6/02/20; this had been 90px */
+	height: 44px;  /* 100% miscalculates border length */
+	padding: 4px 5px;
+	cursor: default;
+	}
+
+.menuInfoTxtClass {
+	float:right;
+	padding: 7px 0px;
+	color: white;
+	text-align: right;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 18px;
+	cursor: default;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.menuInfoBoxClass{
+	box-sizing:border-box;
+	float:right;
+	border: 1px solid black;
+	margin-top: 3px;
+	background-color: white;
+	min-width: 50px;
+	height: 30px;
+	padding: 5px 5px 5px 2px;
+	text-align: right;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 14px;
+	cursor: default;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.menuInfoBxDwnArrBxClass{
+	box-sizing:border-box;
+	float:right;
+	border: 1px solid black;
+	border-left: 0px;
+	margin-top: 3px;
+	background-color: white;
+	width: 30px;
+	height: 30px;
+	background-color: rgb(232,232,232);
+	cursor: default;
+	}
+
+.menuInfoBxDwnArrTxtClass{
+	display:inline-block;
+	padding: 4px 0px;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif; 
+	font-size: 18px;
+	font-weight:normal;
+	transform:scaleX(1.2);
+	color: black;
+		/* text not-selectable or draggable */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none; 
+	}
+
+.menuDrpDwnContnrClass:hover .menuInfoBxDwnArrBxClass {
+	background-color:rgb(192,192,208);
+	}
+
+.menuDrpDwnContnrClass:hover .menuInfoBoxClass {
+	background-color:rgb(216,216,232);
+	}
+
+
+
+		/*  *********************************************** */
+		/*  *********    styles for aboutBoxes    ********* */
+		/*  *********    (including infoBoxes)    ********* */
+		/*  *********************************************** */
+
+.aboutBoxClass{
+	position: fixed;
+	display: none;
+	z-index: 3;
+/*	left & top have to be set by in HTML/javascript for box to move */
+/*	width (700px) must be set in HTML/javascript to center 'close' button */
+	min-height: 150px;
+	background-color: rgb(248,226,226);
+	border: 9px outset rgb(224,128,128);
+	box-shadow: 8px 10px 4px 2px rgba(64,32,32,0.5);
+	padding: 0px;
+	}
+
+.aboutHdrClass {
+	position: relative;
+	width: 100%;
+	height: 45px;
+	padding: 0px;
+	background-color: rgb(255,240,240);
+	font-size: 32px;
+	font-family:Calibri, Arial, Helvetica, sans-serif;
+	}
+
+	
+.aboutHdrTxtClass {
+	position:absolute;
+	top: 0px;
+	left:0px;
+	width:100%;
+	height: 45px;
+	border-bottom: 5px solid rgb(224,128,128);
+	font-size: 32px;
+	font-weight:bold;
+	text-align:center
+	}
+
+.aboutBodyClass {
+	display: block;
+	border: 1px solid black;
+	background-color: rgb(255,240,240);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:14px;
+	padding: 0px;
+	}
+
+.aboutBodyTxtClass {
+	display: inline-block; 
+	padding: 4px 8px 0px 20px;
+	}
+
+.aboutButton {
+	float:none;
+	left: 100px;
+	display:inline-block;
+	margin: 3px;
+	}
+	
+.aboutBotBox {
+	height: 36px;
+	width: 100%; 
+	background-color: rgb(224,128,128); 
+	border: 1px solid black; 
+	}
+
+.infoButton {
+	position:relative;
+	float: left;
+	height: 30px;
+	width: 140px;
+	font-size:14px;
+	border:outset;
+	border-width: 5px;
+	border-color: rgb(192,192,192);
+	background-color: rgb(232,232,232);
+	margin-right: 1px;
+	cursor:pointer;
+	}
+
+.infoButton:hover {
+	background-color: rgb(232,208,208);
+	}
+	
+.infoButton:active {
+	border: inset;
+	border-color: rgb(226,160,160);
+	color: rgb(160,0,0);
+	}
+
+.infoTopXBtnClass{
+	float:right;
+	width: 25px;
+	height: 25px;
+	padding: 0px 1px;
+	margin-right: 0px;
+	border-width: 3px
+	}
+
+.infoMvBtn {
+	position:absolute;
+	float:left;
+	height: 45px;
+	width: 45px;
+	border: 1px solid black;
+	background-color: rgb(232,232,248);
+	font-size: 11px;
+	color: black;
+	text-align:center;
+	padding: 0px;
+/*  No select or drag text */
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none; /* Firefox 2+ */
+	-ms-user-select: none; /* IE 10+ */
+    -webkit-user-select: none; /* Safari 3.1+ */
+    user-select: none; /* Standard syntax */
+	-khtml-user-drag: none; 
+	-o-user-drag: none; 
+	-moz-user-drag: none; 
+	-webkit-user-drag: none; 
+	user-drag: none;
+	}
+
+.infoMvBtn:hover {
+	background-color: rgb(208,208,236);
+	cursor:move;
+	}
+
+.infoMvBtn:active {
+	background-color: rgb(128,128,192);
+	color: white;
+	cursor:move;
+	}
+
+

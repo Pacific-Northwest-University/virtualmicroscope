@@ -1,0 +1,277 @@
+<!-- SlideBox.htm
+	Copyright 2020  Pacific Northwest University of Health Sciences
+    
+    SlideBox.htm is part of the "slide box" portion of the "PNWU Virtual Microscope",
+	 which is an internet web-based program that displays digitally-scanned microscopic specimens.
+	The "PNWU Virtual Microscope" consists of two modules:
+		-- "SlideBox", which searches and displays a list of available slides
+		-- "Viewer" (the "Microscope") which displays the selected slide
+	Both components of the system:  the Viewer ("PNWU Virtual Microscope") and the "PNWU Virtual Slide Box"
+		are free software:  you can redistribute it and/or modify it under the terms of
+		the GNU General Public License as published by the Free Software Foundation, either version 3
+		of the License, or any later version.  See <https://www.gnu.org/licenses/gpl-3.0.html>
+ 	"PNWU Virtual Microscope" ("PNWU Virtual Microscope" Viewer and "PNWU Virtual Slide Box") is distributed in the hope 
+		that it will be useful, but WITHOUT ANY WARRANTY; without even the 
+		implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU Public License for more details.
+	Currently, the "slide box" part of "PNWU Microscope" consists of 9 principal files and other supplementary files:
+    	- one HTML file (this file).
+        - one cascading style sheet
+        - six javascript files
+        - one PHP file
+	Questions concerning "PNWU Microscope" may be directed to:
+    	James Rhodes, PhD
+        Pacific Northwest Univesity of Health Sciences
+        200 University Parkway
+        Yakima WA 98901 USA
+-->
+
+
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0">
+<title>
+	PNWU Slide Box
+    </title>
+<link rel="icon" type="image/png" href="favicon.ico">
+	<!-- use external style sheet -->
+<link rel="stylesheet" type="text/css" href="jrsbStyleMain.css">
+</head>
+
+
+
+<body onLoad="prgInitSldBox()" onResize="prgResizeSldBox()">
+
+	<!--  *******************************************  -->
+	<!--  *****   background page   *****  -->
+	<!--  *******************************************  -->
+		<!-- the background page has z-level = -1 so it should be behind everyone else and 
+    		should not get inanyone's way.  Currently it is gray, but we could do something 
+            else later (e.g. a pattern of repeating seals?)  -->
+<div class="sbBkgrdClass"></div>
+
+
+	<!--  *******************************************  -->
+	<!--  *****   srchPage ("Make list" page)   *****  -->
+	<!--  *******************************************  -->
+		
+<div id="srchPage" class="srchPageClass">
+	<div id="srchMenu" class="menuMainClass">
+    	<div class="menuBtnClass" onClick="gotoViewer('',event)" ontouchend="gotoViewer('',event)">
+			<img src="http://viewer.pnwu.edu/images/PNWU_icon.png" alt="" style="height:32px; width:32px; background-color: rgba(255,255,255,0.4); float:left">
+			<span style="float:right; margin:0px 3px 2px 0px; font-size: 26px">) </span>
+       		<span style="font-size:12px; line-height: 0.95; text-align:center; float:right; margin: 5px 0px">
+        		Without<br>a slide
+            	</span>
+			<span style="float:right; font-size: 26px">(</span>
+			<span style="float:right; margin: 5px 2px">To Microscope</span>
+			</div> 		<!-- end Go to Microscope -->
+
+					<!-- "SORT BY" drop down menu  -->
+		<div class="menuDrpDwnContnrClass" style="float:right">
+        	<div id="menuSrtBy" class="menuDrpDwnItemClass menuInfoItemClass menuItmRightClass"
+            		style="padding: 3px 3px 3px 10px">
+                <div class="menuInfoBxDwnArrBxClass">
+					<div class="menuInfoBxDwnArrTxtClass">V</div>
+                    </div>
+                <div id="menuSrtByBox" class="menuInfoBoxClass" style="width: 132px; color:black">
+                	slide number&nbsp;&darr;
+					</div>
+            	<span class="menuInfoTxtClass">Sort by:&nbsp;</span>
+               </div>
+
+			<div id="menuDDSrtByContent" class="menuDrpDwnContentClass menuDrpDwnShort">
+						<!-- Sort-by items are inserted here  -->
+	        	<div id="menuSrtByDivider" class="menuDrpDwnSubItem menuDrpDwnShort menuDivider"></div>
+						<!-- Sort "Ascending" item  -->
+				<div id="menuSrtOrdAsc" class="menuDrpDwnSubItem menuClickable menuDrpDwnShort"
+                		onClick="menuSetSrtByDir(1)">  
+					 &darr; Ascending (<span style="font-size: 75%">A-to-Z</span>)
+    	            </div>
+				<div id="menuSrtOrdDec" class="menuDrpDwnSubItem menuClickable menuDrpDwnShort"
+                		onClick="menuSetSrtByDir(-1)">    
+					&uarr; Descending (<span style="font-size: 75%">Z-to-A</span>)
+					</div>
+				</div>  <!-- end of "Sort-by" drop-down content -->
+			</div><!-- end of "Sort-by" drop-down container -->
+
+
+					<!-- "ABOUT" drop down menu  -->
+		<div class="menuDrpDwnContnrClass" style="float:right">
+        	<div id="menuAbout" class="menuDrpDwnItemClass menuItmRightClass">
+            	About
+                </div>
+ 			<div id="menuDrpDwnAbout" class="menuDrpDwnContentClass">
+						<!-- "About Slide Box" item  -->
+				<div id="menuAboutSlideBox" class="menuClickable menuDrpDwnSubItem" onClick="aboutSlideBoxOpen()">  
+					About PNWU Slide Box <b>...</b>
+    	            </div>
+						<!-- "About PNWU" item  -->
+		       	<div id="menuAboutPNWU" class="menuClickable menuDrpDwnSubItem"
+    	                    onClick="aboutPNWUOpen()">
+					About PNWU <b>...</b>
+            	    </div>
+						<!-- "More about PNWU link  -->
+				<div id="menuMorePNWU" class="menuClickable menuDrpDwnSubItem" 
+                   			style="padding-top: 4px; height: 22px"
+							onClick="window.open('https://www.pnwu.edu/inside-pnwu/about-us','_blank')" >
+					More about PNWU 
+					(<span style="display: inline-block; text-align:center; vertical-align:bottom; font-size:75%; line-height: 0.9">
+						go to:&nbsp;<br>www.pnwu.edu
+						</span>)
+					</div>  <!-- end of "More about PNWU" item -->
+						<!-- "About Virtual Slides" btn  -->
+		       	<div id="menuVirSlides" class="menuClickable menuDrpDwnSubItem"
+    	                    onClick="aboutVirSlidesOpen()">
+					About the slides in SlideBox <b>...</b>
+               		</div>
+						<!-- "About Scanned Slides" btn  -->
+		       	<div id="menuScanSlides" class="menuClickable menuDrpDwnSubItem"
+    	                    onClick="aboutScanSlidesOpen()">
+					About slides scanned at PNWU <b>...</b>
+            	    </div>
+        		<div class="menuDrpDwnSubItem menuDivider"></div>
+							<!-- "Using Mouse" btn  -->
+	   	    	<div id="menuUsingSldBox" class="menuClickable menuDrpDwnSubItem"
+ 	                       onClick="aboutUsingSldBoxOpen()">
+					Using SlideBox <b>...</b>
+        	        </div>
+							<!-- "Specific ranges: Organ systems" btn  -->
+	   	    	<div id="menuSpcRangeOrg" class="menuClickable menuDrpDwnSubItem"
+                		style="padding-top:4px; height: 22px"
+ 	                    onClick="window.open('http://viewer.pnwu.edu/docs/SlideBox_Specific_ranges-Organs.pdf','_blank')" >
+					Specific ranges - Organs
+ 						(<span style="display: inline-block; text-align:center; vertical-align:bottom; font-size:75%; line-height: 0.9">
+						pdf in new<br>tab/window
+						</span>)
+	       	        </div>
+							<!-- "Specific ranges: Stains" btn  -->
+	   	    	<div id="menuSpcRangeStn" class="menuClickable menuDrpDwnSubItem"
+                		style="padding-top:4px; height: 22px"
+ 	                    onClick="window.open('http://viewer.pnwu.edu/docs/SlideBox_Specific_ranges-Stains.pdf','_blank')" >
+					Specific ranges - Stains
+ 						(<span style="display: inline-block; text-align:center; vertical-align:bottom; font-size:75%; line-height: 0.9">
+						pdf in new<br>tab/window
+						</span>)
+	       	        </div>
+				</div>  <!-- end of "ABOUT" Content  -->
+			</div>  <!-- end of About menu container -->
+
+
+
+		</div>  <!-- end of menu -->
+
+	<div id="srchPageTitle" class="srchPageTitleClass"> PNWU Virtual Slide Box </div>
+    <div class="srchRightClass">
+    	<div id="srchInstr" class="srchInstrClass">
+	       	<div class="srchInstrTxtClass" style="margin-top:0px">
+				Click on the <b>"Get list of slides"</b> button (<span style="font-size:14px">below</span>) 
+				to display a list of PNWU's collection of virtual slides.&nbsp;
+    	    	You can use the search options listed on the left to limit which of the virtual slides in 
+        	    PNWU's collection are displayed in this list.
+				</div>
+	 		<button id="startBtn" class="srchBtnClass" onClick="selGetSldList()" ontouchend="selGetSldList()">
+				Get list of slides
+				</button>
+			<div class="srchInstrTxtClass">
+				Once the list of slides is displayed, clicking on the slide 
+        	   	(<span style="font-size:14px">i.e. clicking on the box containing the information about the slide</span>) 
+           		will cause the slide to be displayed by the PNWU Virtual Microscope.
+				</div>
+    		</div>  <!-- end of srchInstrClass box -->
+		<div id="srchLogo" class="srchLogoClass">
+			<img id="srchLogoImg" class="srchLogoImgClass" src="http://viewer.pnwu.edu/images/PNWU_seal.png" alt="">
+			<div class="srchLogoTxtClass" style="top:10px; margin-bottom: 8px;">
+   	          	&copy;&nbsp;2020 &nbsp;Pacific Northwest University<br>
+                <span style="text-align:center">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                	&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;of Health Sciences</span>
+                </div>
+			<div class="srchLogoTxtClass" style="top:55px">
+    			For more information, see (<span style='font-size:80%'>on menu</span>):<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&quot;About&quot;&rarr;&quot;About PNWU Slide Box&quot
+				</div>
+			</div>
+		</div>  <!-- end of srchRight box -->
+
+			<!-- left side of search page is built by initBuildLeft() -->
+     <div class="srchLeftClass" id="srchLeftSide">
+		<div class="srchLeftTitleClass">
+        	Limit slides by:
+            </div>
+    	</div>
+    </div>
+
+	<!--  ***********************************************  -->
+	<!--  *****   lstPage ("List-of-slides" page)   *****  -->
+	<!--  ***********************************************  -->
+
+<div class="lstPageClass" id="lstPage">
+	<div class="menuMainClass" id="menuLst1">
+
+					<!--  "Get a new slide list" button -->	
+    	<div id="menuLstBackToSrch" class="menuBtnClass" onClick="srchBackFromLst(event.shiftKey)">
+			<img src="http://viewer.pnwu.edu/images/PNWU_icon.png" alt="" style="height:32px; width:32px; background-color: rgba(255,255,255,0.4); float:right">
+			<span style="float:left; font-size: 26px">&#9668;</span>
+			<span style="float:left; margin: 5px 2px">Create a new slide list&nbsp;</span>
+			</div> 		<!-- end New slide list -->
+					<!-- Number of slides box -->
+					<!--  "Go to microscope" button -->	
+    	<div id="menuLstToView" class="menuBtnClass" style="float:right" onClick="gotoViewer('',event)">
+			<img src="http://viewer.pnwu.edu/images/PNWU_icon.png" alt="" style="height:32px; width:32px; background-color: rgba(255,255,255,0.4); float:left">
+			<span style="float:right; margin:0px 3px 2px 0px; font-size: 26px">)&#9658;</span>
+       		<span style="font-size:12px; line-height: 0.95; text-align:center; float:right; margin: 5px 0px">
+        		Without<br>a slide
+            	</span>
+			<span style="float:right; font-size: 26px">(</span>
+			<span style="float:right; margin: 5px 2px">To Microscope</span>
+			</div> 		<!-- end Go to Microscope -->
+ 
+    	</div>  <!-- end menu #1 -->
+	<div id="lstPageHdr" class="lstPageHdrClass">
+    	Click on the &quot;slide&quot; (<span style="font-size:75%">the box containing slide information</span>) 
+        to view the slide in PNWU Virtual Microscope.
+        </div>
+
+	<!--  list window (lstWndClass) is inserted here by lstBuildWnd() -->
+    
+	</div>  <!-- end lst Page -->
+
+
+
+	<!--  *******************************************  -->
+	<!--  *****      About information box      *****  -->
+	<!--  *******************************************  -->
+
+
+<div id="aboutBox" class="aboutBoxClass" style="display:none; top:100px; left: 600px; width: 700px">
+	<div id="aboutBoxHdr" class="aboutHdrClass">
+		<span id="aboutBoxHdrTxt" class="aboutHdrTxtClass"><span id="aboutBoxHdrTitle"></span></span>
+        <button class="infoButton infoTopXBtnClass" 
+       		onClick="document.getElementById('aboutBox').style.display = 'none'">
+			<b>X</b>
+			</button>
+ 		<button id="aboutBoxMv" class="infoMvBtn" onMouseOver="this.innerHTML = 'Mouse down to move'" onMouseOut="aboutBxMusOut(this)"
+    			onMouseDown="aboutBxMusDwn(this,event)" onMouseUp="aboutBxMusUp(this)">
+        	Press here to move
+			</button>
+      </div>
+	<div id="aboutBoxText" class="aboutBodyClass">	
+		</div>
+	<div id="aboutCloseDiv" class="aboutBotBox">
+		<button id="aboutCloseBtn" class="infoButton aboutButton" style="width:140px"
+        	onClick="document.getElementById('aboutBox').style.display = 'none'">
+        	Close
+            </button>
+		</div>
+   </div>
+
+<script src = "jrsbGlobal.js"> </script>
+<script src = "jrsbSelect.js"> </script>
+<script src = "jrsbRegAjax.js"> </script>
+<script src = "jrsbList.js"> </script>
+<script src = "jrsbMenu.js"> </script>
+<script src = "jrsbTouch.js"> </script>
+</body>
+</html>
