@@ -9,6 +9,6 @@ The files comprising the Slide Box portion of the "PNWU Virtual Microscope" are 
 
 Besides a database of microscope-image tiles, the program also relies on a SQL database containing metadata relative to each microscope slide.
 
-Questions or comments regarding the PNWU Virtual Microscope can be emailed to:  Microscope@PNWU.edu.  In addition to several known bugs, there undoubtedly are many bugs in the program that are still waiting to be discovered.  We encourage you to take the Viewer (http://viewer.pnwu.edu) out for a test-run, and we welcome any help you might be able to provide in finding and identifying bugs.  Bugs can be reported to MicroscopeBugs@PNWU.edu.
+Questions or comments regarding the PNWU Virtual Microscope can be emailed to:  Microscope@PNWU.edu.  In addition to several known bugs, there undoubtedly are many bugs in the program that are still waiting to be discovered.  We encourage you to take the Viewer (http://viewer.pnwu.edu?sb=3005&x=130000&y=76000&z=9&f=5) out for a test-run, and we welcome any help you might be able to provide in finding and identifying bugs.  Bugs can be reported to MicroscopeBugs@PNWU.edu.
   
 There are many aspects of the project that still need to be developed, and we would be delighted to have collaborators.  If you are interested in helping with this project, please email Jim Rhodes using the contact information listed in "About" => "About PNWU Microscope" in the microscope viewer:  http://viewer.pnwu.edu. 
